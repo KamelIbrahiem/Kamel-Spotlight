@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#080A0F">
+  <title>Kamel Spotlight</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&family=Cinzel:wght@700;800&display=swap" rel="stylesheet">
+  <link rel="icon" type="image/svg+xml" href="img/logo.svg">
+  <link rel="manifest" href="manifest.webmanifest">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="Spotlight">
+  <link rel="apple-touch-icon" href="img/apple-touch-icon.png">
+  <link rel="stylesheet" href="css/style.css">
+  <script>document.documentElement.dataset.theme=(location.search.includes("light")?"light":localStorage.getItem("ks-theme")||"dark")</script>
+</head>
+<body>
+  <div id="intro" aria-hidden="true"><svg viewBox="0 0 200 200"><defs><linearGradient id="gd" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#FFE9A8"/><stop offset=".5" stop-color="#FFB800"/><stop offset="1" stop-color="#E58A00"/></linearGradient><linearGradient id="body" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#3a4152"/><stop offset="1" stop-color="#1d2230"/></linearGradient><linearGradient id="beam" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#FFE9A8" stop-opacity=".7"/><stop offset="1" stop-color="#FFD369" stop-opacity="0"/></linearGradient><radialGradient id="pool"><stop offset="0" stop-color="#FFD369" stop-opacity=".75"/><stop offset="1" stop-color="#FFD369" stop-opacity="0"/></radialGradient></defs><rect x="10" y="10" width="180" height="180" rx="42" fill="#0b0e15" stroke="#2a3040"/><ellipse class="ipool" cx="100" cy="168" rx="56" ry="11" fill="url(#pool)"/><g class="iletter"><path transform="translate(57.20 154.15) scale(0.1537 -0.1537)" d="M303 583Q296 583 290.0 582.5Q284 582 278 581Q202 568 86 386Q67 357 48.5 322.0Q30 287 14 253Q5 233 -1.5 210.5Q-8 188 -8 162Q-8 159 -8.0 155.5Q-8 152 -7 148Q0 96 28.0 59.0Q56 22 102 10Q135 1 171 1Q208 1 247 10Q285 19 322.5 35.5Q360 52 396 74Q429 95 457.0 119.5Q485 144 505 175Q510 184 516.5 194.0Q523 204 528 214Q542 240 553.5 268.0Q565 296 565 334Q565 336 565.0 337.5Q565 339 565 341Q565 343 564.5 344.0Q564 345 564 346L536 719Q535 728 527.0 729.5Q519 731 514 724L441 602L468 242V237Q468 231 454 223Q447 219 431.0 213.0Q415 207 390 196Q366 186 341.5 179.0Q317 172 290 165Q247 155 202 155Q201 155 200.0 155.0Q199 155 197 155Q144 155 112 181Q71 213 71 242Q71 255 78 268Q92 294 107.5 318.0Q123 342 139 366Q172 414 230 438Q235 440 239.5 440.5Q244 441 250 441Q280 441 290 386L260 373Q254 370 245 367Q239 365 228.0 363.0Q217 361 214 354L173 228Q171 221 176.0 216.0Q181 211 188 213Q246 234 287.5 269.5Q329 305 354 357Q366 385 376.0 416.0Q386 447 386 481Q386 527 365.0 555.0Q344 583 303 583Z" fill="url(#gd)"/></g><g transform="translate(128 36)"><g class="ican" transform="rotate(28) scale(.9)"><path d="M-9 14 L-30 78 L30 78 L9 14Z" fill="url(#beam)" class="beam"/><path d="M-15 6 V-4 H15 V6" fill="none" stroke="#FFB800" stroke-width="3" stroke-linecap="round"/><circle cx="0" cy="-4" r="2.5" fill="#FFB800"/><path d="M-8 -6 L8 -6 L12 14 L-12 14Z" fill="url(#body)" stroke="#FFB800" stroke-width="2" stroke-linejoin="round"/><ellipse cx="0" cy="14" rx="12" ry="4" fill="#FFF3C9" stroke="#FFB800" stroke-width="1.5" class="lens"/><rect x="-6" y="-2" width="12" height="3" rx="1.5" fill="#FFB800" opacity=".6"/></g></g></svg><b>KAMEL SPOTLIGHT</b></div>
+  <header class="top">
+    <a class="brand" href="#/"><img class="logo" src="img/logo.svg" alt=""><span><b id="brandName"></b><small id="brandTag" dir="rtl" lang="ar"></small></span></a>
+    <form class="search" id="searchForm" autocomplete="off"><input id="q" type="search" enterkeyhint="search"><div id="suggest" class="suggest" hidden></div></form>
+    <button class="sync" id="themeBtn" type="button" aria-label="theme">&#9680;</button><button class="lang" id="langBtn" type="button">AR</button>
+  </header>
+  <nav class="tabs" id="nav"></nav>
+  <main id="view"></main>
+  <footer class="foot" id="foot"></footer>
+  <div id="modal" class="modal" hidden></div>
+  <script>if(sessionStorage.getItem("ks-intro")||matchMedia("(prefers-reduced-motion: reduce)").matches){document.getElementById("intro").remove()}else{sessionStorage.setItem("ks-intro","1");var i=document.getElementById("intro");var done=function(){i.classList.add("out");setTimeout(function(){i.remove()},450)};setTimeout(done,2300);i.addEventListener("click",done)}</script>
+  <script type="module" src="js/app.js"></script>
+  <script>if("serviceWorker"in navigator)addEventListener("load",function(){navigator.serviceWorker.register("sw.js")})</script>
+</body>
+</html>

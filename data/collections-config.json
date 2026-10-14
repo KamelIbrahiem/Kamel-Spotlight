@@ -1,0 +1,1194 @@
+{
+ "_help": "Edit freely. franchises: name, ar, pattern (regex on title, case-insensitive). months: filters genres (any) / genres_all (every one)/keywords/awards (regex)/min_votes/min_rating/pin(titles forced in). Curated/author collections: use 'titles': [[title, year], ...] instead of 'pattern' (year optional). Entry kinds: saga | author | director. Optional per entry: writers[] (match the Writer field, '(novel)' notes ignored), directors[], pattern, titles. All are combined (union). Kind 'place': add text (regex over normalized title+keywords+plot, Arabic and English) and optional exclude. Kind 'actor': actors[] matches the Actors field (all media types). Kind 'topic': title_text = regex over normalized title + media subtype only (stricter than 'text'). Kind 'topic' also accepts flag: anime | cartoon | german | 3d (set from the sheet's Source Collection / Quality).",
+ "franchises": [
+  {
+   "name": "Star Wars",
+   "ar": "ستار وورز",
+   "pattern": "^star wars",
+   "kind": "saga"
+  },
+  {
+   "name": "James Bond 007",
+   "ar": "جيمس بوند",
+   "pattern": "james bond|^(dr\\.? no|from russia with love|goldfinger|thunderball|you only live twice|on her majesty's secret service|diamonds are forever|live and let die|the man with the golden gun|the spy who loved me|moonraker|for your eyes only|octopussy|a view to a kill|the living daylights|licence to kill|goldeneye|tomorrow never dies|the world is not enough|die another day|casino royale|quantum of solace|skyfall|spectre|no time to die)$",
+   "kind": "saga"
+  },
+  {
+   "name": "Harry Potter",
+   "ar": "هاري بوتر",
+   "pattern": "harry potter|fantastic beasts",
+   "kind": "saga"
+  },
+  {
+   "name": "The Lord of the Rings & Hobbit",
+   "ar": "سيد الخواتم",
+   "pattern": "lord of the rings|^the hobbit",
+   "kind": "saga"
+  },
+  {
+   "name": "Marvel Cinematic Universe",
+   "ar": "عالم مارفل",
+   "pattern": "^(iron man|the incredible hulk|thor|captain america|the avengers|avengers|guardians of the galaxy|ant-man|doctor strange|black panther|captain marvel|spider-man: (homecoming|far from home|no way home)|black widow|shang-chi|eternals|the marvels)",
+   "kind": "saga"
+  },
+  {
+   "name": "X-Men",
+   "ar": "إكس مان",
+   "pattern": "^x-men|^the wolverine|^logan$|^deadpool|^dark phoenix",
+   "kind": "saga"
+  },
+  {
+   "name": "Batman / Dark Knight",
+   "ar": "باتمان",
+   "pattern": "batman|dark knight",
+   "kind": "saga"
+  },
+  {
+   "name": "Spider-Man",
+   "ar": "سبايدر مان",
+   "pattern": "spider-man|spider man",
+   "kind": "saga"
+  },
+  {
+   "name": "Superman & DC",
+   "ar": "سوبرمان",
+   "pattern": "^superman|^man of steel|justice league|^wonder woman|^aquaman|^shazam",
+   "kind": "saga"
+  },
+  {
+   "name": "Fast & Furious",
+   "ar": "فاست آند فيوريس",
+   "pattern": "fast (&|and) furious|^the fast and the furious|^2 fast|^fast five|^furious 7|^f9|^fast x|^hobbs",
+   "kind": "saga"
+  },
+  {
+   "name": "Mission: Impossible",
+   "ar": "المهمة المستحيلة",
+   "pattern": "^mission: impossible|^mission impossible",
+   "kind": "saga"
+  },
+  {
+   "name": "Jason Bourne",
+   "ar": "جايسون بورن",
+   "pattern": "^the bourne|^jason bourne|^bourne",
+   "kind": "saga"
+  },
+  {
+   "name": "John Wick",
+   "ar": "جون ويك",
+   "pattern": "^john wick",
+   "kind": "saga"
+  },
+  {
+   "name": "Matrix",
+   "ar": "ماتريكس",
+   "pattern": "^the matrix",
+   "kind": "saga"
+  },
+  {
+   "name": "Terminator",
+   "ar": "المدمر",
+   "pattern": "^terminator|^the terminator",
+   "kind": "saga"
+  },
+  {
+   "name": "Alien & Predator",
+   "ar": "إيلين وبريديتور",
+   "pattern": "^alien|^aliens$|^prometheus|^predator|^alien vs",
+   "kind": "saga"
+  },
+  {
+   "name": "Rocky & Creed",
+   "ar": "روكي",
+   "pattern": "^rocky|^creed",
+   "kind": "saga"
+  },
+  {
+   "name": "Rambo",
+   "ar": "رامبو",
+   "pattern": "^rambo|^first blood",
+   "kind": "saga"
+  },
+  {
+   "name": "Die Hard",
+   "ar": "داي هارد",
+   "pattern": "^die hard",
+   "kind": "saga"
+  },
+  {
+   "name": "Indiana Jones",
+   "ar": "إنديانا جونز",
+   "pattern": "^indiana jones|^raiders of the lost ark",
+   "kind": "saga"
+  },
+  {
+   "name": "Jurassic Park & World",
+   "ar": "الحديقة الجوراسية",
+   "pattern": "^jurassic",
+   "kind": "saga"
+  },
+  {
+   "name": "Pirates of the Caribbean",
+   "ar": "قراصنة الكاريبي",
+   "pattern": "^pirates of the caribbean",
+   "kind": "saga"
+  },
+  {
+   "name": "Transformers",
+   "ar": "ترانسفورمرز",
+   "pattern": "^transformers|^bumblebee",
+   "kind": "saga"
+  },
+  {
+   "name": "Planet of the Apes",
+   "ar": "كوكب القرود",
+   "pattern": "planet of the apes",
+   "kind": "saga"
+  },
+  {
+   "name": "Star Trek",
+   "ar": "ستار تريك",
+   "pattern": "^star trek",
+   "kind": "saga"
+  },
+  {
+   "name": "The Godfather",
+   "ar": "العراب",
+   "pattern": "^the godfather",
+   "kind": "saga"
+  },
+  {
+   "name": "The Hunger Games",
+   "ar": "ألعاب الجوع",
+   "pattern": "^the hunger games",
+   "kind": "saga"
+  },
+  {
+   "name": "Twilight Saga",
+   "ar": "توايلايت",
+   "pattern": "^the twilight saga|^twilight$",
+   "kind": "saga"
+  },
+  {
+   "name": "Pixar: Toy Story",
+   "ar": "توي ستوري",
+   "pattern": "^toy story",
+   "kind": "saga"
+  },
+  {
+   "name": "Shrek",
+   "ar": "شريك",
+   "pattern": "^shrek",
+   "kind": "saga"
+  },
+  {
+   "name": "Ice Age",
+   "ar": "العصر الجليدي",
+   "pattern": "^ice age",
+   "kind": "saga"
+  },
+  {
+   "name": "Despicable Me & Minions",
+   "ar": "أنا الحقير",
+   "pattern": "^despicable me|^minions",
+   "kind": "saga"
+  },
+  {
+   "name": "Kung Fu Panda",
+   "ar": "كونغ فو باندا",
+   "pattern": "^kung fu panda",
+   "kind": "saga"
+  },
+  {
+   "name": "How to Train Your Dragon",
+   "ar": "درب تنينك",
+   "pattern": "^how to train your dragon",
+   "kind": "saga"
+  },
+  {
+   "name": "Madagascar",
+   "ar": "مدغشقر",
+   "pattern": "^madagascar|^penguins of madagascar",
+   "kind": "saga"
+  },
+  {
+   "name": "Cars",
+   "ar": "سيارات",
+   "pattern": "^cars( \\d)?$",
+   "kind": "saga"
+  },
+  {
+   "name": "Saw",
+   "ar": "سو",
+   "pattern": "^saw( |$)",
+   "kind": "saga"
+  },
+  {
+   "name": "Scream",
+   "ar": "سكريم",
+   "pattern": "^scream",
+   "kind": "saga"
+  },
+  {
+   "name": "The Conjuring Universe",
+   "ar": "الكونجورينج",
+   "pattern": "^the conjuring|^annabelle|^the nun|^insidious",
+   "kind": "saga"
+  },
+  {
+   "name": "Halloween",
+   "ar": "هالوين",
+   "pattern": "^halloween",
+   "kind": "saga"
+  },
+  {
+   "name": "Final Destination",
+   "ar": "وجهة نهائية",
+   "pattern": "^final destination",
+   "kind": "saga"
+  },
+  {
+   "name": "Resident Evil",
+   "ar": "ريزيدنت إيفل",
+   "pattern": "^resident evil",
+   "kind": "saga"
+  },
+  {
+   "name": "Mad Max",
+   "ar": "ماد ماكس",
+   "pattern": "^mad max|^furiosa",
+   "kind": "saga"
+  },
+  {
+   "name": "Ocean's",
+   "ar": "أوشنز",
+   "pattern": "^ocean's|^oceans",
+   "kind": "saga"
+  },
+  {
+   "name": "The Mummy",
+   "ar": "المومياء",
+   "pattern": "^the mummy|^the scorpion king",
+   "kind": "saga"
+  },
+  {
+   "name": "Home Alone",
+   "ar": "وحيد في المنزل",
+   "pattern": "^home alone",
+   "kind": "saga"
+  },
+  {
+   "name": "Back to the Future",
+   "ar": "العودة للمستقبل",
+   "pattern": "^back to the future",
+   "kind": "saga"
+  },
+  {
+   "name": "Lethal Weapon & Beverly Hills Cop",
+   "ar": "",
+   "pattern": "^lethal weapon|^beverly hills cop",
+   "kind": "saga"
+  },
+  {
+   "name": "Men in Black",
+   "ar": "رجال في الأسود",
+   "pattern": "^men in black",
+   "kind": "saga"
+  },
+  {
+   "name": "Kill Bill & Tarantino Saga",
+   "ar": "",
+   "pattern": "^kill bill",
+   "kind": "saga"
+  },
+  {
+   "name": "Taken",
+   "ar": "مختطفة",
+   "pattern": "^taken( |$)",
+   "kind": "saga"
+  },
+  {
+   "name": "Hangover",
+   "ar": "الهانج أوفر",
+   "pattern": "^the hangover",
+   "kind": "saga"
+  },
+  {
+   "name": "American Pie",
+   "ar": "",
+   "pattern": "^american pie",
+   "kind": "saga"
+  },
+  {
+   "name": "Police Academy",
+   "ar": "",
+   "pattern": "^police academy",
+   "kind": "saga"
+  },
+  {
+   "name": "Rush Hour",
+   "ar": "",
+   "pattern": "^rush hour",
+   "kind": "saga"
+  },
+  {
+   "name": "Bad Boys",
+   "ar": "",
+   "pattern": "^bad boys",
+   "kind": "saga"
+  },
+  {
+   "name": "The Expendables",
+   "ar": "المرتزقة",
+   "pattern": "^the expendables",
+   "kind": "saga"
+  },
+  {
+   "name": "Dune",
+   "ar": "كثيب",
+   "pattern": "^dune",
+   "kind": "saga"
+  },
+  {
+   "name": "The Maze Runner",
+   "ar": "",
+   "pattern": "^the maze runner",
+   "kind": "saga"
+  },
+  {
+   "name": "Divergent",
+   "ar": "",
+   "pattern": "^(the )?divergent|^insurgent|^allegiant",
+   "kind": "saga"
+  },
+  {
+   "name": "Narnia",
+   "ar": "نارنيا",
+   "pattern": "narnia",
+   "kind": "saga"
+  },
+  {
+   "name": "The Karate Kid / Cobra Kai",
+   "ar": "",
+   "pattern": "^the karate kid",
+   "kind": "saga"
+  },
+  {
+   "name": "Austin Powers",
+   "ar": "",
+   "pattern": "^austin powers",
+   "kind": "saga"
+  },
+  {
+   "name": "Scary Movie",
+   "ar": "",
+   "pattern": "^scary movie",
+   "kind": "saga"
+  },
+  {
+   "name": "Ip Man",
+   "ar": "يب مان",
+   "pattern": "^ip man",
+   "kind": "saga"
+  },
+  {
+   "name": "Pink Panther",
+   "ar": "",
+   "pattern": "pink panther",
+   "kind": "saga"
+  },
+  {
+   "name": "Johnny English",
+   "ar": "جوني إنجليش",
+   "pattern": "^johnny english",
+   "kind": "saga"
+  },
+  {
+   "name": "Paddington",
+   "ar": "",
+   "pattern": "^paddington",
+   "kind": "saga"
+  },
+  {
+   "name": "Sherlock Holmes",
+   "ar": "شارلوك هولمز",
+   "pattern": "^sherlock holmes|^the adventures of sherlock holmes",
+   "kind": "saga"
+  },
+  {
+   "name": "Cheaper by the Dozen / Meet the",
+   "ar": "",
+   "pattern": "^meet the (parents|fockers)|^little fockers",
+   "kind": "saga"
+  },
+  {
+   "name": "Naguib Mahfouz",
+   "ar": "نجيب محفوظ",
+   "kind": "author",
+   "writers": [
+    "Naguib Mahfouz",
+    "نجيب محفوظ"
+   ],
+   "titles": [
+    [
+     "بداية ونهاية"
+    ],
+    [
+     "اللص والكلاب"
+    ],
+    [
+     "السمان والخريف"
+    ],
+    [
+     "ثرثرة فوق النيل"
+    ],
+    [
+     "الكرنك"
+    ],
+    [
+     "الشحاذ"
+    ],
+    [
+     "الطريق"
+    ],
+    [
+     "زقاق المدق"
+    ],
+    [
+     "خان الخليلي"
+    ],
+    [
+     "القاهرة 30"
+    ],
+    [
+     "ميرامار"
+    ],
+    [
+     "الحب تحت المطر"
+    ],
+    [
+     "حب فوق هضبة الهرم"
+    ],
+    [
+     "الجوع"
+    ],
+    [
+     "التوت والنبوت"
+    ],
+    [
+     "قلب الليل"
+    ],
+    [
+     "الفتوة"
+    ],
+    [
+     "بين القصرين"
+    ],
+    [
+     "قصر الشوق"
+    ],
+    [
+     "السكرية"
+    ],
+    [
+     "الحرافيش"
+    ],
+    [
+     "أهل القمة"
+    ],
+    [
+     "درب المهابيل"
+    ],
+    [
+     "الاختيار"
+    ],
+    [
+     "ليل وخيوط"
+    ],
+    [
+     "الجرىء"
+    ],
+    [
+     "اميرة حبي انا"
+    ],
+    [
+     "شهد الملكة"
+    ],
+    [
+     "الراعي والنساء"
+    ],
+    [
+     "المطارد"
+    ],
+    [
+     "القضية 68"
+    ],
+    [
+     "وعدت من الغياب"
+    ],
+    [
+     "الشيطان يعظ"
+    ],
+    [
+     "فتوات بولاق"
+    ],
+    [
+     "السراب"
+    ],
+    [
+     "الخرتيت"
+    ],
+    [
+     "ريا وسكينة"
+    ]
+   ]
+  },
+  {
+   "name": "Agatha Christie",
+   "ar": "أجاثا كريستي",
+   "kind": "author",
+   "writers": [
+    "Agatha Christie"
+   ],
+   "pattern": "agatha christie|^poirot|^miss marple|^murder on the orient express|^death on the nile|^and then there were none|^evil under the sun|^ten little"
+  },
+  {
+   "name": "William Shakespeare",
+   "ar": "شكسبير",
+   "kind": "author",
+   "writers": [
+    "William Shakespeare"
+   ],
+   "pattern": "^(hamlet|macbeth|othello|king lear|romeo (\\+|and|&) juliet|julius caesar|the tempest|much ado about nothing|henry v|richard iii|coriolanus|twelfth night|a midsummer night's dream|titus|cymbeline)"
+  },
+  {
+   "name": "Charles Dickens",
+   "ar": "تشارلز ديكنز",
+   "kind": "author",
+   "writers": [
+    "Charles Dickens"
+   ],
+   "pattern": "^oliver twist|^great expectations|^a christmas carol|^david copperfield|^a tale of two cities|^nicholas nickleby|^bleak house|^little dorrit|^our mutual friend"
+  },
+  {
+   "name": "Stephen King",
+   "ar": "ستيفن كينج",
+   "kind": "author",
+   "writers": [
+    "Stephen King"
+   ],
+   "pattern": "^(it|misery|the shining|the green mile|the shawshank redemption|carrie|pet sematary|cujo|christine|stand by me|the mist|1408|salem's lot|doctor sleep|gerald's game|the dark tower|children of the corn)( |$|:)"
+  },
+  {
+   "name": "Arthur Conan Doyle (Sherlock)",
+   "ar": "آرثر كونان دويل",
+   "kind": "author",
+   "writers": [
+    "Arthur Conan Doyle",
+    "Conan Doyle"
+   ],
+   "pattern": "sherlock holmes|^sherlock$|^mr\\. holmes|^enola holmes|^the hound of the baskervilles|^holmes"
+  },
+  {
+   "name": "The Brontë Sisters",
+   "ar": "الأخوات برونتي",
+   "kind": "author",
+   "writers": [
+    "Charlotte Bront",
+    "Emily Bront",
+    "Anne Bront"
+   ],
+   "pattern": "jane eyre|wuthering heights|the tenant of wildfell hall"
+  },
+  {
+   "name": "Nicholas Sparks",
+   "ar": "نيكولاس سباركس",
+   "kind": "author",
+   "writers": [
+    "Nicholas Sparks"
+   ],
+   "pattern": "^(the notebook|a walk to remember|dear john|the last song|safe haven|the best of me|the choice|the longest ride|the lucky one|nights in rodanthe|message in a bottle)$"
+  },
+  {
+   "name": "Jane Austen",
+   "ar": "جين أوستن",
+   "kind": "author",
+   "writers": [
+    "Jane Austen"
+   ],
+   "titles": [
+    [
+     "Emma",
+     1996
+    ],
+    [
+     "Emma.",
+     2020
+    ],
+    [
+     "Mansfield Park",
+     1999
+    ],
+    [
+     "Persuasion",
+     2022
+    ],
+    [
+     "Pride & Prejudice",
+     2005
+    ],
+    [
+     "Sense and Sensibility",
+     1995
+    ],
+    [
+     "Love & Friendship",
+     2016
+    ],
+    [
+     "Becoming Jane",
+     2007
+    ]
+   ]
+  },
+  {
+   "name": "Alfred Hitchcock",
+   "ar": "هيتشكوك",
+   "kind": "director",
+   "directors": [
+    "Alfred Hitchcock"
+   ]
+  },
+  {
+   "name": "Christopher Nolan",
+   "ar": "نولان",
+   "kind": "director",
+   "directors": [
+    "Christopher Nolan"
+   ]
+  },
+  {
+   "name": "Steven Spielberg",
+   "ar": "سبيلبرج",
+   "kind": "director",
+   "directors": [
+    "Steven Spielberg"
+   ]
+  },
+  {
+   "name": "Okasha's Nights",
+   "ar": "ليالي عكاشة",
+   "kind": "author",
+   "writers": [
+    "Osama Anwar Okasha",
+    "Usama Anwar Okasha",
+    "Osama Anwar Okasha",
+    "أسامة أنور عكاشة"
+   ],
+   "titles": [
+    [
+     "ليالي الحلمية"
+    ],
+    [
+     "ضمير أبلة حكمت"
+    ],
+    [
+     "زيزينيا"
+    ],
+    [
+     "رحلة السيد أبو العلا البشري"
+    ],
+    [
+     "الشهد والدموع"
+    ],
+    [
+     "أرابيسك"
+    ],
+    [
+     "المصراوية"
+    ],
+    [
+     "كناريا وشركاه"
+    ],
+    [
+     "أميرة في عابدين"
+    ],
+    [
+     "وقال البحر"
+    ],
+    [
+     "عصفور النار"
+    ],
+    [
+     "الراية البيضا"
+    ],
+    [
+     "امرأة من زمن الحب"
+    ],
+    [
+     "كتيبة إعدام"
+    ],
+    [
+     "دماء على الأسفلت"
+    ]
+   ]
+  },
+  {
+   "name": "Alexandria",
+   "ar": "إسكندرية",
+   "kind": "place",
+   "text": "alexandria|اسكندريه|الاسكندريه",
+   "exclude": "alexandria,? (virginia|va\\b|louisiana|egypt, virginia)|alexandria ocasio|alexandria daddario|alexandria bay",
+   "titles": [
+    [
+     "إسكندرية ليه"
+    ],
+    [
+     "إسكندرية كمان وكمان"
+    ],
+    [
+     "إسكندرية نيويورك"
+    ],
+    [
+     "زيزينيا"
+    ],
+    [
+     "أحلام هند وكاميليا"
+    ],
+    [
+     "بحر النجوم"
+    ],
+    [
+     "أرض الخوف"
+    ],
+    [
+     "Alexandria Why"
+    ],
+    [
+     "Alexandria Again and Forever"
+    ],
+    [
+     "Alexandria... New York"
+    ],
+    [
+     "Agora"
+    ]
+   ]
+  },
+  {
+   "name": "Yahia El-Fakharany",
+   "ar": "عالم ما يحيى الفخراني",
+   "kind": "actor",
+   "actors": [
+    "Yahia El-Fakharany",
+    "Yehia El-Fakharany",
+    "Yehia El Fakharany",
+    "Yahia Al-Fakharani",
+    "Yahya El Fakharany",
+    "يحيى الفخراني",
+    "يحي الفخراني"
+   ],
+   "titles": [
+    [
+     "ليالي الحلمية"
+    ],
+    [
+     "زيزينيا"
+    ],
+    [
+     "رحلة السيد أبو العلا البشري"
+    ],
+    [
+     "الخواجة عبد القادر"
+    ],
+    [
+     "الليل وآخره"
+    ],
+    [
+     "ذئاب الجبل"
+    ],
+    [
+     "دهشة"
+    ],
+    [
+     "للعدالة وجوه كثيرة"
+    ],
+    [
+     "ونسيت أني إنسان"
+    ]
+   ]
+  },
+  {
+   "name": "The Zaeem (Adel Emam)",
+   "ar": "الزعيم",
+   "kind": "actor",
+   "actors": [
+    "Adel Emam",
+    "Adel Imam",
+    "Adel Imam",
+    "عادل إمام",
+    "عادل امام"
+   ],
+   "titles": [
+    [
+     "عمارة يعقوبيان"
+    ],
+    [
+     "الإرهاب والكباب"
+    ],
+    [
+     "اللعب مع الكبار"
+    ],
+    [
+     "طيور الظلام"
+    ],
+    [
+     "الواد محروس بتاع الوزير"
+    ],
+    [
+     "الهلفوت"
+    ],
+    [
+     "سلام يا صاحبي"
+    ],
+    [
+     "شمس الزناتي"
+    ],
+    [
+     "مرجان أحمد مرجان"
+    ],
+    [
+     "بوبوس"
+    ],
+    [
+     "السفارة في العمارة"
+    ],
+    [
+     "الأفوكاتو"
+    ],
+    [
+     "النوم في العسل"
+    ],
+    [
+     "بخيت وعديلة"
+    ],
+    [
+     "رسالة إلى الوالي"
+    ],
+    [
+     "حنفي الأبهة"
+    ],
+    [
+     "أمير الظلام"
+    ],
+    [
+     "زهايمر"
+    ],
+    [
+     "تيته رهيبة"
+    ],
+    [
+     "التجربة الدنماركية"
+    ],
+    [
+     "مدرسة المشاغبين"
+    ],
+    [
+     "شاهد ماشافش حاجة"
+    ],
+    [
+     "بودي جارد"
+    ],
+    [
+     "عريس من جهة أمنية"
+    ],
+    [
+     "صاحب السعادة"
+    ],
+    [
+     "فرقة ناجي عطا الله"
+    ],
+    [
+     "عوالم خفية"
+    ],
+    [
+     "أستاذ ورئيس قسم"
+    ],
+    [
+     "جعلوني مجرما"
+    ],
+    [
+     "المنسي"
+    ],
+    [
+     "الزعيم"
+    ]
+   ]
+  },
+  {
+   "name": "Wahid Hamed",
+   "ar": "عالم وحيد حامد",
+   "kind": "author",
+   "writers": [
+    "Wahid Hamed",
+    "Waheed Hamed",
+    "Wahid Hamid",
+    "وحيد حامد"
+   ],
+   "titles": [
+    [
+     "سفر الأحلام"
+    ],
+    [
+     "الإرهاب والكباب"
+    ],
+    [
+     "طيور الظلام"
+    ],
+    [
+     "اللعب مع الكبار"
+    ],
+    [
+     "النوم في العسل"
+    ],
+    [
+     "الغول"
+    ],
+    [
+     "البريء"
+    ],
+    [
+     "اضحك الصورة تطلع حلوة"
+    ],
+    [
+     "الراقصة والسياسي"
+    ],
+    [
+     "عمارة يعقوبيان"
+    ],
+    [
+     "احنا بتوع الأتوبيس"
+    ],
+    [
+     "جري الوحوش"
+    ],
+    [
+     "المنسي"
+    ],
+    [
+     "معالي الوزير"
+    ],
+    [
+     "كشف المستور"
+    ],
+    [
+     "ملف سامية شعراوي"
+    ],
+    [
+     "العائلة"
+    ],
+    [
+     "الجماعة"
+    ],
+    [
+     "دماء على الأسفلت"
+    ]
+   ]
+  },
+  {
+   "name": "One Thousand and One Nights",
+   "ar": "ألف ليلة وليلة",
+   "kind": "topic",
+   "title_text": "الف ليله\\s*و\\s*ليله|one thousand and one nights|1001 nights|arabian nights|alf layla"
+  },
+  {
+   "name": "Ramadan Fawazeer",
+   "ar": "الفوازير",
+   "kind": "topic",
+   "title_text": "فوازير|fawazeer|fawazir|fazoora|فطوطه|ام العريف",
+   "titles": [
+    [
+     "فوازير نيللي"
+    ],
+    [
+     "فوازير شريهان"
+    ],
+    [
+     "فوازير فطوطة"
+    ],
+    [
+     "فطوطة"
+    ],
+    [
+     "فوازير ألف ليلة وليلة"
+    ],
+    [
+     "فوازير عالم ورق ورق"
+    ],
+    [
+     "فوازير حول العالم"
+    ],
+    [
+     "فوازير المطبخ"
+    ]
+   ]
+  },
+  {
+   "name": "Anime",
+   "ar": "أنمي",
+   "kind": "topic",
+   "flag": "anime"
+  },
+  {
+   "name": "Cartoons & kids",
+   "ar": "كرتون وأطفال",
+   "kind": "topic",
+   "flag": "cartoon"
+  },
+  {
+   "name": "German audio",
+   "ar": "بصوت ألماني",
+   "kind": "topic",
+   "flag": "german"
+  },
+  {
+   "name": "3D",
+   "ar": "ثلاثي الأبعاد",
+   "kind": "topic",
+   "flag": "3d"
+  }
+ ],
+ "months": {
+  "1": {
+   "name": "Fresh Start",
+   "ar": "بداية جديدة",
+   "blurb": "True stories and fresh starts to kick the year off.",
+   "blurb_ar": "قصص حقيقية وبدايات جديدة",
+   "genres": [
+    "Biography"
+   ],
+   "min_votes": 20000,
+   "min_rating": 7.3
+  },
+  "2": {
+   "name": "Oscar Season",
+   "ar": "موسم الأوسكار",
+   "blurb": "Films that took home Oscars.",
+   "blurb_ar": "أفلام فازت بالأوسكار",
+   "awards": "won \\d+ oscar|won an oscar",
+   "min_votes": 20000
+  },
+  "3": {
+   "name": "Mind Benders",
+   "ar": "ألغاز وعقول",
+   "blurb": "Twists, puzzles and heads that spin.",
+   "blurb_ar": "ألغاز وتويستات",
+   "genres": [
+    "Mystery",
+    "Sci-Fi"
+   ],
+   "keywords": "twist|time travel|dream|memory|puzzle|mind",
+   "min_votes": 50000,
+   "min_rating": 7.0
+  },
+  "4": {
+   "name": "Laugh Out Loud",
+   "ar": "ضحك من القلب",
+   "blurb": "Comedies to lighten the month.",
+   "blurb_ar": "كوميديا تفرفش",
+   "genres": [
+    "Comedy"
+   ],
+   "min_votes": 30000,
+   "min_rating": 6.8
+  },
+  "5": {
+   "name": "Epic Adventures",
+   "ar": "مغامرات ملحمية",
+   "blurb": "Big journeys and bigger worlds.",
+   "blurb_ar": "رحلات ومغامرات ضخمة",
+   "genres": [
+    "Adventure"
+   ],
+   "min_votes": 60000,
+   "min_rating": 7.0
+  },
+  "6": {
+   "name": "Summer Blockbusters",
+   "ar": "بلوك باستر الصيف",
+   "blurb": "Big-screen action for hot nights.",
+   "blurb_ar": "أكشن للصيف",
+   "min_votes": 150000,
+   "min_rating": 6.8,
+   "genres_all": [
+    "Action",
+    "Adventure"
+   ]
+  },
+  "7": {
+   "name": "Escape & Road Trip",
+   "ar": "سفر وهروب",
+   "blurb": "Road trips, islands and getaways.",
+   "blurb_ar": "رحلات وجزر وهروب",
+   "keywords": "road trip|island|beach|vacation|cruise",
+   "min_votes": 20000,
+   "min_rating": 6.5
+  },
+  "8": {
+   "name": "Chills",
+   "ar": "قشعريرة",
+   "blurb": "Horror and tension for late summer.",
+   "blurb_ar": "رعب وتشويق",
+   "genres": [
+    "Horror",
+    "Thriller"
+   ],
+   "min_votes": 50000,
+   "min_rating": 6.8
+  },
+  "9": {
+   "name": "Back to School",
+   "ar": "العودة للمدرسة",
+   "blurb": "School, college and growing up.",
+   "blurb_ar": "مدرسة وجامعة وكبر",
+   "keywords": "school|teacher|college|student|high school|university",
+   "min_votes": 30000,
+   "min_rating": 6.8
+  },
+  "10": {
+   "name": "Month of Love",
+   "ar": "شهر الحب",
+   "blurb": "Romance for the month of love.",
+   "blurb_ar": "أفلام رومانسية لشهر الحب",
+   "genres": [
+    "Romance"
+   ],
+   "min_votes": 30000,
+   "min_rating": 6.8
+  },
+  "11": {
+   "name": "Sweet November",
+   "ar": "سويت نوفمبر",
+   "blurb": "Same vibe as Sweet November: tender, bittersweet love stories.",
+   "blurb_ar": "نفس مزاج سويت نوفمبر، حب حلو ومر",
+   "pin": [
+    "Sweet November"
+   ],
+   "min_votes": 25000,
+   "min_rating": 6.9,
+   "genres_all": [
+    "Romance",
+    "Drama"
+   ]
+  },
+  "12": {
+   "name": "Holiday Season",
+   "ar": "موسم الأعياد",
+   "blurb": "Christmas, snow and family nights.",
+   "blurb_ar": "كريسماس وعائلة",
+   "keywords": "christmas|holiday|snow|santa|winter",
+   "min_votes": 15000,
+   "min_rating": 6.3
+  }
+ }
+}
