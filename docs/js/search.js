@@ -2,7 +2,7 @@ import { store } from "./data.js";
 import { isWatched } from "./collections.js";
 
 export const norm = (s) => (s || "").toLowerCase().normalize("NFKD").replace(/[\u0300-\u036f\u0640\u064b-\u065f]/g, "")
-  .replace(/[أإآ]/g, "ا");
+  .replace(/[أإآ]/g, "ا").replace(/ى/g, "ي").replace(/ة/g, "ه");
 
 export function search(query, limit = Infinity) {
   const words = norm(query).split(/\s+/).filter(Boolean);
@@ -11,6 +11,11 @@ export function search(query, limit = Infinity) {
   for (let i = 0; i < store.movies.length && out.length < limit; i++) {
     const hay = store.index[i];
     if (words.every((w) => hay.includes(w))) out.push(store.movies[i]);
+  }
+  // A multi-word query is a name or phrase first: when some titles contain the words together, show only those.
+  if (words.length > 1 && limit === Infinity) {
+    const phrase = words.join(" "), exact = out.filter((m) => store.index[m.id].includes(phrase));
+    if (exact.length) return exact;
   }
   return out;
 }
@@ -28,7 +33,7 @@ export function suggest(query) {
 
 export const filterAndSort = (list, f) => {
   let r = list.filter((m) =>
-    (!f.type || f.type.includes(m.c)) &&
+    (!f.type || f.type.includes(m.c)) && (!f.ll || (f.ll === "*" ? !!m.ll : m.ll === f.ll)) && (!f.sub || (["cartoon", "anime"].includes(f.sub) ? m.fl.includes(f.sub) : f.sub === "movie" ? m.c === "arabic-movie" && !m.sb : f.sub === "series" ? m.c === "arabic-series" && !m.sb : m.sb === f.sub)) &&
     (!f.genre || m.g.includes(f.genre)) &&
     (!f.quality || m.q === f.quality) && (!f.ramadan || m.rm) && (!f.country || m.co.includes(f.country)) && (!f.rated || m.rd === f.rated) &&
     (!f.era || (m.y && m.y >= f.era && m.y < f.era + 10)) &&

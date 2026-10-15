@@ -27,6 +27,17 @@ PLOT_AR = json.loads(_PA.read_text(encoding="utf-8")) if _PA.exists() else {}   
 _PC = Path(__file__).resolve().parent.parent / "data" / "cast-tmdb.json"
 CAST_TMDB = json.loads(_PC.read_text(encoding="utf-8")) if _PC.exists() else {}   # fuller cast lists, see fetch_cast.py
 
+def _load_quotes():
+    out = {}
+    for n in ("quotes-ar.json", "quotes-foreign.json"):   # foreign file optional: only 2+source verified quotes
+        f = Path(__file__).resolve().parent.parent / "data" / n
+        if f.exists():
+            for k, v in json.loads(f.read_text(encoding="utf-8")).items(): out.setdefault(k, []).extend(v)
+    return out
+_PB = Path(__file__).resolve().parent.parent / "data" / "backdrop-tmdb.json"
+BACKDROPS = json.loads(_PB.read_text(encoding="utf-8")) if _PB.exists() else {}   # {imdb id: "/path.jpg"}, see fetch_backdrops.py
+QUOTES = _load_quotes()   # verified quotes only, each with cited sources, see fetch_quotes_wikiquote.py / quotes-ar.json
+
 def clean_title(t):
     """Public titles: drop site tags like ' - IMedia.Movies' and trailing '[2000]' year tags."""
     t = re.sub(r"\s*[-\u2013]\s*\S+\.(movies|com|net|org|tv)\s*$", "", t or "", flags=re.I)
@@ -48,8 +59,17 @@ def load(src):
     for r in rows: r["Title"] = clean_title(r.get("Title"))
     return rows
 
-def lst(s):
-    return [x.strip() for x in (s or "").split(",") if x.strip()]
+def lst(s, seps=",\u060c"):
+    """Split a list cell on the Latin and Arabic comma (Arabic rows use the Arabic one); de-duplicates, keeps order."""
+    out = []
+    for x in re.split("[" + seps + "]", s or ""):
+        x = x.strip()
+        if x and x not in out: out.append(x)
+    return out
+
+def norm_search(s):
+    """Search-index folding only (never used for keys): norm() plus ى/ي and ة/ه, same as search.js."""
+    return norm(s).replace("ى", "ي").replace("ة", "ه")
 
 def norm(s):
     s = unicodedata.normalize("NFKD", (s or "").lower())
@@ -86,6 +106,13 @@ def content_type(row):
     if mt == "series": return "arabic-series" if arabic else "series"
     return "arabic-movie" if arabic else "movie"
 
+SUBCATS = {"سهرات تليفزيونية": "ev", "مسلسلات اذاعية": "radio", "افلام التليفزيون": "tvm"}
+def subcat(row):
+    """Arabic sub-filter bucket from Media Type + Source Category: play, program, ev (TV evenings), radio (radio series), tvm (TV movies), else ''."""
+    mt = (row.get("Media Type") or "").strip().lower()
+    if mt in ("play", "program"): return mt
+    return SUBCATS.get((row.get("Source Category") or "").strip(), "")
+
 def seasons_of(raw):
     """'S02,S93' -> [2]; tokens above S40 are release-group noise, not seasons."""
     out = []
@@ -98,10 +125,26 @@ def is_ramadan(row):
 
 def poster(p):
     p = (p or "").strip()
-    return p if p.startswith("http") else ""
+    return p if p.startswith("http") or p.startswith("img/posters/") else ""
+
+def _ll(r):
+    tags = {x.strip().lower() for x in (r.get("Source Collection") or "").split(";")}
+    cat = (r.get("Source Category") or "").strip()
+    if ("logy/lia" in tags or cat == "Logy/Lia library") and "multi audio" not in tags:
+        return "de" if "german" in {x.strip().lower() for x in (r.get("Spoken languages") or "").split(",")} else ""
+    return ""
 
 def main():
     rows = load(sys.argv[1] if len(sys.argv) > 1 else DEFAULT_SRC)
+    # Arabic name variants (أ/ا, ى/ي, ة/ه, "عبد العزيز" vs "عبدالعزيز") are merged into the most frequent spelling,
+    # so one person = one chip / filter / page. Latin names are left alone.
+    _cnt = defaultdict(Counter)
+    for r in rows:
+        for col, seps in (("Actors", ",\u060c/"), ("Director", ",\u060c"), ("Writer / Creator", ",\u060c")):
+            for nm in lst(r.get(col), seps):
+                if re.search("[\u0600-\u06ff]", nm): _cnt[norm_search(nm).replace(" ", "")][nm] += 1
+    CANON = {nm: c.most_common(1)[0][0] for c in _cnt.values() if len(c) > 1 for nm in c}
+    canon = lambda names: list(dict.fromkeys(CANON.get(n, n) for n in names))
     # Duplicate rule: movies/plays/programmes - same Title+Year keep highest quality.
     # Series: season-level rows are grouped into ONE show by Title (never by Year: series years are parser noise).
     best, dupes, shows = {}, 0, {}
@@ -116,7 +159,7 @@ def main():
             if (r.get("Year") or "").isdigit(): sh["years"].append(int(r["Year"]))
             if not poster(sh["row"].get("Poster")) and poster(r.get("Poster")): sh["row"] = r
             continue
-        key = (norm(r["Title"]), r.get("Year", ""), ct)
+        key = (norm(r["Title"]), r.get("Year", ""), ct, _ll(r))   # German Logy/Lia editions stay separate rows
         q = QUALITY_RANK.get((r.get("Quality") or "").strip(), 0)
         if key in best:
             dupes += 1
@@ -135,7 +178,7 @@ def main():
         while k in seen_keys: k += "+"
         seen_keys.add(k)
         rt, votes = rating(r.get("IMDb Rating (Votes)"))
-        genres, actors, directors = lst(r.get("Genre")), lst(r.get("Actors")), lst(r.get("Director"))
+        genres, actors, directors = lst(r.get("Genre")), canon(lst(r.get("Actors"), ",\u060c/")), canon(lst(r.get("Director")))
         extra = CAST_TMDB.get(k.rstrip("+"))   # same key as the movie: IMDb ID, t:title:year or s:title
         if extra and len(extra) > len(actors): actors = extra
         year = int(r["Year"]) if (r.get("Year") or "").isdigit() else None
@@ -143,25 +186,30 @@ def main():
         ram = show["ram"] if show else is_ramadan(r)
         seas = sorted(show["seasons"]) if show else seasons_of(r.get("Seasons"))
         tags = {x.strip().lower() for x in (r.get("Source Collection") or "").split(";")}
-        fl = [f for f, on in (("anime", "anime" in tags), ("cartoon", bool(tags & {"cartoon", "animation"})), ("german", bool(tags & {"german film", "kino"})),
-                               ("3d", (r.get("Quality") or "").strip().lower() == "3d" or bool(tags & {"3d", "3d movies"}))) if on]
-        movies.append({"id": mid, "fl": fl, "k": k, "t": r["Title"], "o": r.get("Original Name", ""), "y": year, "c": ct,
+        fl = [f for f, on in (("anime", "anime" in tags), ("cartoon", bool(tags & {"cartoon", "animation"})),                                ("3d", (r.get("Quality") or "").strip().lower() == "3d" or bool(tags & {"3d", "3d movies"}))) if on]
+        # Logy & Lia library: German = German audio (not Multi Audio); English = the rest. Multi Audio cartoons live under Cartoons only.
+        cat = (r.get("Source Category") or "").strip()
+        spoken = {x.strip().lower() for x in (r.get("Spoken languages") or "").split(",")}
+        ll = ""
+        if ("logy/lia" in tags or cat == "Logy/Lia library") and "multi audio" not in tags:
+            ll = "de" if "german" in spoken else "en"
+        movies.append({"id": mid, "fl": fl, "ll": ll, "k": k, "t": r["Title"], "o": r.get("Original Name", ""), "y": year, "c": ct,
                        "g": genres, "a": actors, "d": directors, "r": rt, "v": votes,
                        "q": (r.get("Quality") or "").strip(), "p": poster(r.get("Poster")),
-                       "rd": (r.get("Rated") or "").strip(), "w": lst(r.get("Writer / Creator")), "pr": lst(r.get("Production Company")), "rm": 1 if ram else 0, "sn": len(seas), "ep": show["eps"] if show else int(num(r.get("Episode Count")) or 0), "lg": (r.get("Original language") or "").strip(), "rt": num(r.get("Runtime")), "co": lst(r.get("Country")), "n": i})
+                       "rd": (r.get("Rated") or "").strip(), "w": canon(lst(r.get("Writer / Creator"))), "pr": lst(r.get("Production Company")), "rm": 1 if ram else 0, "sb": subcat(r), "sn": len(seas), "ep": show["eps"] if show else int(num(r.get("Episode Count")) or 0), "lg": (r.get("Original language") or "").strip(), "rt": num(r.get("Runtime")), "co": lst(r.get("Country")), "n": i})
         plot = (r.get("Plot") or "").strip()
         par = PLOT_AR.get(hashlib.sha1(plot.encode("utf-8")).hexdigest()[:16]) if plot and plot != "N/A" and not re.search("[\u0600-\u06ff]", plot) else None
         if par and not re.search("[\u0600-\u06ff]", par): par = None   # engine echoed English: show the original instead
-        details[mid] = {"plot": r.get("Plot", ""), **({"plot_ar": par} if par else {}), "kw": r.get("Keywords", ""), "rd": (r.get("Rated") or "").strip(), "w": lst(r.get("Writer / Creator")),
+        details[mid] = {"plot": r.get("Plot", ""), **({"plot_ar": par} if par else {}), "kw": r.get("Keywords", ""), "rd": (r.get("Rated") or "").strip(), "w": canon(lst(r.get("Writer / Creator"))),
                         "aw": r.get("Awards", ""), "rated": r.get("Rated", ""), "rel": r.get("Release Date", ""),
                         "bo": (r.get("Box Office") or "").strip(), "imdb": r.get("IMDb ID", ""),
                         
                         "prod": r.get("Production Company", ""), "seasons": seas, "spoken": r.get("Spoken languages", ""), "subtype": r.get("Media Subtype", ""), "tmdb": r.get("TMDb ID", ""), "notes": r.get("Notes", "")}
-        search.append(norm(" | ".join([r["Title"], r.get("Original Name", ""), r.get("Actors", ""), r.get("Director", ""),
-                                       r.get("Writer / Creator", ""), r.get("Production Company", ""), r.get("Genre", ""), r.get("Keywords", ""),
+        search.append(norm_search(" | ".join([r["Title"], r.get("Original Name", ""), " | ".join(actors), " | ".join(directors),
+                                       " | ".join(canon(lst(r.get("Writer / Creator")))), r.get("Production Company", ""), r.get("Genre", ""), r.get("Keywords", ""),
                                        r.get("IMDb ID", "")])))
         for a in actors: people["actors"][a].append(mid)
-        for w in lst(r.get("Writer / Creator")): people.setdefault("writers", defaultdict(list))[w].append(mid)
+        for w in canon(lst(r.get("Writer / Creator"))): people.setdefault("writers", defaultdict(list))[w].append(mid)
         for d in directors: people["directors"][d].append(mid)
         for field, ok in [("poster", poster(r.get("Poster"))), ("plot", r.get("Plot")), ("keywords", r.get("Keywords")),
                           ("imdb_id", r.get("IMDb ID")), ("country", r.get("Country")),
@@ -187,6 +235,10 @@ def main():
              "statistics": stats, "health": {k: v for k, v in health.items()},
              "collections": build_collections.build(movies, details)}
     OUT.mkdir(parents=True, exist_ok=True)
+    for mv in movies:
+        if mv["k"] in QUOTES: details[mv["id"]]["qt"] = QUOTES[mv["k"]]
+        bd = BACKDROPS.get(details[mv["id"]].get("imdb") or "")
+        if bd: details[mv["id"]]["bd"] = bd
     (OUT / "details").mkdir(exist_ok=True)
     for f in (OUT / "details").glob("*.json"): f.unlink()
     CH = 250  # details are lazy-loaded in chunks of 250 titles: details/<id // 250>.json

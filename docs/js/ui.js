@@ -3,10 +3,12 @@ import { isWatched, myRating } from "./collections.js";
 export const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
 export const $ = (sel, el = document) => el.querySelector(sel);
 
+export const typeKey = (m) => ({ ev: "tEvening", radio: "tRadio", tvm: "tTvm", play: "tPlay", program: "tProgram" })[m.sb] || ({ play: "tPlay", program: "tProgram", movie: "tMovie", "arabic-movie": "tMovie", series: "tSeries", "arabic-series": "tSeries" })[m.c] || "";
+export const typeTag = (m) => { const k = typeKey(m); return k ? `<span class="tt tt-${m.c.endsWith("series") ? "s" : "m"}">${esc(t(k))}</span>` : ""; };
 export function card(m) {
   const img = m.p ? `<img loading="lazy" src="${esc(m.p)}" alt="" onerror="this.remove()">` : "";
   return `<a class="card" href="#/title/${m.id}" data-id="${m.id}">
-    <div class="poster"><span class="ph">${esc(m.t)}</span>${img}
+    <div class="poster"><span class="ph">${esc(m.t)}</span>${img}${typeTag(m)}
       ${m.r ? `<span class="badge">&#9733; ${m.r.toFixed(1)}</span>` : ""}${m.q ? `<span class="q">${esc(m.q)}</span>` : ""}${isWatched(m.id) ? `<span class="seen">&#10003;</span>` : ""}${myRating(m.id) ? `<span class="mine">&#9733;${myRating(m.id)}</span>` : ""}</div>
     <div class="ct">${esc(m.t)}</div><div class="cy">${m.y ?? ""}${m.rd && m.rd !== "N/A" ? ` · <b class="cq">${esc(m.rd)}</b>` : ""}</div><div class="cg">${m.g.slice(0, 2).map(esc).join(" · ")}</div></a>`;
 }

@@ -8,13 +8,13 @@ import { toggleFav, toggleWatched, setRating, myRating, backend, owner, setOwner
 import { esc, $ } from "./ui.js";
 
 const view = $("#view"), qInput = $("#q"), sug = $("#suggest");
-const NAV = [["", "home"], ["movies", "movies"], ["series", "series"], ["arabic", "arabic"], ["collections", "collections"], ["discover", "discover"], ["favorites", "favorites"], ["lists", "lists"], ["stats", "stats"], ["health", "health"]];
+const NAV = [["", "home"], ["movies", "movies"], ["series", "series"], ["arabic", "arabic"], ["cartoons", "cartoons"], ["anime", "anime"], ["logy", "logy"], ["collections", "collections"], ["discover", "discover"], ["favorites", "favorites"], ["lists", "lists"], ["stats", "stats"], ["health", "health"]];
 
 function chrome() {
   document.title = CONFIG.siteName;
   $("#brandName").textContent = CONFIG.siteName.toUpperCase();
   $("#brandTag").textContent = CONFIG.tagline;
-  $("#foot").innerHTML = `${esc(t("poweredBy"))} <b>${esc(CONFIG.credit)}</b><br><small class="tmdb">Cast data courtesy of TMDB. This product uses the TMDB API but is not endorsed or certified by TMDB.</small>`;
+  $("#foot").innerHTML = `${esc(t("poweredBy"))} <b>${esc(CONFIG.credit)}</b><br><small class="tmdb">Cast data courtesy of TMDB. This product uses the TMDB API but is not endorsed or certified by TMDB.</small><br><small class="tmdb">Film quotes: English Wikiquote (CC BY-SA 4.0) and the cited Arabic press sources, each linked on its title page.</small>`;
   qInput.placeholder = t("search");
  
   $("#langBtn").textContent = getLang() === "ar" ? "EN" : "AR";
@@ -30,9 +30,10 @@ async function route() {
   view.innerHTML = `<p class="empty">${t("loading")}</p>`;
   try {
     if (!seg[0]) view.innerHTML = V.home() + await V.monthRow().catch(() => "");
-    else if (["movies", "series", "arabic", "plays", "programs", "all"].includes(seg[0])) view.innerHTML = V.library(seg[0], p);
+    else if (["movies", "series", "arabic", "plays", "programs", "cartoons", "anime", "logy", "all"].includes(seg[0])) view.innerHTML = V.library(seg[0], p);
+    else if (seg[0] === "german") { location.replace("#/logy?sub=de"); return; }
     else if (seg[0] === "title") view.innerHTML = await V.title(+seg[1]);
-    else if (seg[0] === "p") view.innerHTML = V.person(seg[1]);
+    else if (seg[0] === "p") view.innerHTML = await V.person(seg[1]);
     else if (seg[0] === "c") view.innerHTML = V.company(seg[1]);
     else if (seg[0] === "g") { location.replace(`#/all?genre=${encodeURIComponent(seg[1])}`); return; }
     else if (seg[0] === "collections") view.innerHTML = await V.collectionsView(seg[1], seg[2]);
