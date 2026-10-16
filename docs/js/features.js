@@ -1,7 +1,7 @@
 // Extra views: mood picker, poster wall, TV mode, shared lists, watched, similar titles, fun stats.
 import { store, loadStats, loadCollections } from "./data.js";
 import { filterAndSort } from "./search.js";
-import { t, getLang } from "./i18n.js";
+import { t, getLang, gname } from "./i18n.js";
 import { watched, isWatched, backend, idsFromKeys, myRating, rated } from "./collections.js";
 import { card, grid, row, esc } from "./ui.js";
 
@@ -42,6 +42,8 @@ export function ratingWidget(id) {
 
 /* ---------- mood picker ---------- */
 const has = (m, ...g) => g.some((x) => m.g.includes(x));
+// Family night only shows titles with a known child-suitable certificate. PG-13, R, TV-14, TV-MA, Not Rated and a missing certificate are all excluded.
+const KIDS_OK = new Set(["G", "PG", "TV-Y", "TV-Y7", "TV-Y7-FV", "TV-G", "TV-PG"]);
 const MOODS = [
   ["romantic", "💕", "Romantic", "رومانسي", (m) => has(m, "Romance")],
   ["action", "💥", "Action", "أكشن", (m) => has(m, "Action", "Adventure")],
@@ -50,7 +52,7 @@ const MOODS = [
   ["thrill", "🔍", "Thrilling", "تشويق", (m) => has(m, "Thriller", "Mystery", "Crime")],
   ["scared", "😱", "Scary", "رعب", (m) => has(m, "Horror")],
   ["mind", "🧠", "Mind-bending", "يلخبط العقل", (m) => has(m, "Sci-Fi", "Mystery") && (m.r || 0) >= 7],
-  ["family", "👨‍👩‍👧", "Family night", "سهرة عائلية", (m) => has(m, "Family", "Animation")],
+  ["family", "👨‍👩‍👧", "Family night", "سهرة عائلية", (m) => has(m, "Family", "Animation", "Kids") && !has(m, "Horror") && KIDS_OK.has(m.rd)],
   ["epic", "⚔️", "Epic", "ملحمي", (m) => has(m, "War", "History", "Biography") && (m.r || 0) >= 7.2],
   ["feelgood", "☀️", "Feel-good", "يفرفش", (m) => has(m, "Musical", "Music") || (has(m, "Comedy") && has(m, "Romance"))],
   ["classic", "🎞️", "Classics", "كلاسيكيات", (m) => m.y && m.y < 1980 && (m.r || 0) >= 7.5],
@@ -77,9 +79,9 @@ export function wall(p) {
   const list = shuffle(filterAndSort(store.movies, { type: WALL_TYPES[type], genre }).filter((m) => m.p), seed);
   const shown = list.slice(0, page * 400);
   const genres = [...new Set(store.movies.flatMap((m) => m.g))].sort();
-  const sel = (name, label, opts, cur) => `<select data-p="${name}"><option value="">${label}</option>${opts.map(([v, l]) => `<option value="${esc(v)}" ${v === cur ? "selected" : ""}>${esc(l)}</option>`).join("")}</select>`;
+  const sel = (name, label, opts, cur) => `<select data-p="${name}" aria-label="${esc(label)}"><option value="">${label}</option>${opts.map(([v, l]) => `<option value="${esc(v)}" ${v === cur ? "selected" : ""}>${esc(l)}</option>`).join("")}</select>`;
   return `<h1 class="pt">${t("wall")}</h1><div class="filters">${sel("type", t("all"), [["movies", t("movies")], ["series", t("series")], ["arabic", t("arabic")]], p.get("type") || "")}
-    ${sel("genre", t("genre"), genres.map((g) => [g, g]), genre)}<a class="reset" href="#/wall?r=${Math.random()}">&#8635; ${t("shuffle")}</a></div>
+    ${sel("genre", t("genre"), genres.map((g) => [g, gname(g)]), genre)}<a class="reset" href="#/wall?r=${Math.random()}">&#8635; ${t("shuffle")}</a></div>
     <div class="wall">${shown.map((m) => `<a href="#/title/${m.id}" title="${esc(m.t)} ${m.y ?? ""}"><img loading="lazy" src="${esc(m.p)}" alt="${esc(m.t)}" onerror="this.parentNode.remove()"></a>`).join("")}</div>
     ${shown.length < list.length ? `<button class="btn more" data-more="${page + 1}">${t("loadMore")}</button>` : ""}`;
 }

@@ -1,6 +1,6 @@
 import { CONFIG } from "./config.js";
 import { t, setLang, getLang } from "./i18n.js";
-import { loadCore } from "./data.js";
+import { loadCore, ensureIndex } from "./data.js";
 import { suggest } from "./search.js";
 import * as V from "./views.js";
 import * as X from "./features.js";
@@ -15,7 +15,7 @@ function chrome() {
   $("#brandName").textContent = CONFIG.siteName.toUpperCase();
   $("#brandTag").textContent = CONFIG.tagline;
   $("#foot").innerHTML = `${esc(t("poweredBy"))} <b>${esc(CONFIG.credit)}</b><br><small class="tmdb">Cast data courtesy of TMDB. This product uses the TMDB API but is not endorsed or certified by TMDB.</small><br><small class="tmdb">Film quotes: English Wikiquote (CC BY-SA 4.0) and the cited Arabic press sources, each linked on its title page.</small>`;
-  qInput.placeholder = t("search");
+  qInput.placeholder = t("search"); qInput.setAttribute("aria-label", t("aria_search")); $("#themeBtn").setAttribute("aria-label", t("aria_theme")); $("#menuBtn").textContent = "\u2630 " + t("sectionsBtn");
  
   $("#langBtn").textContent = getLang() === "ar" ? "EN" : "AR";
   const cur = location.hash.replace(/^#\/?/, "").split(/[/?]/)[0];
@@ -29,6 +29,7 @@ async function route() {
   const p = new URLSearchParams(qs), seg = path.split("/").map(decodeURIComponent);
   view.innerHTML = `<p class="empty">${t("loading")}</p>`;
   try {
+    if (p.get("q")) await ensureIndex();
     if (!seg[0]) view.innerHTML = V.home() + await V.monthRow().catch(() => "");
     else if (["movies", "series", "arabic", "plays", "programs", "cartoons", "anime", "logy", "all"].includes(seg[0])) view.innerHTML = V.library(seg[0], p);
     else if (seg[0] === "german") { location.replace("#/logy?sub=de"); return; }
@@ -66,6 +67,12 @@ view.addEventListener("click", (e) => {
   const y = scrollY; route().then(() => scrollTo(0, y));
 });
 
+view.addEventListener("click", (e) => { const b = e.target.closest("[data-fbtn]"); if (b) b.nextElementSibling.classList.toggle("open"); });
+$("#menuBtn").addEventListener("click", () => {
+  const m = $("#modal"); m.hidden = false;
+  m.innerHTML = `<div class="sheet menu"><h3>${t("sectionsBtn")}</h3><div class="mgrid">${NAV.map(([h, k]) => `<a class="chip" href="#/${h}">${t(k)}</a>`).join("")}<a class="chip" href="#/mood">${t("mood")}</a><a class="chip" href="#/wall">${t("wall")}</a><a class="chip" href="#/tv">${t("tvMode")}</a><a class="chip" href="#/watched">${t("watched")}</a></div><button class="btn" data-close>${t("close")}</button></div>`;
+  m.onclick = (ev) => { if (ev.target === m || ev.target.closest("[data-close],a")) m.hidden = true; };
+});
 // favorites, lists
 view.addEventListener("click", (e) => {
   const f = e.target.closest("[data-fav]"), a = e.target.closest("[data-addlist]"), d = e.target.closest("[data-dellist]");
@@ -91,15 +98,17 @@ function openPicker(movieId) {
 }
 
 // search box: suggestions while typing, Enter opens full results
-qInput.addEventListener("input", () => {
+qInput.addEventListener("focus", () => ensureIndex().catch(() => {}), { once: true });
+qInput.addEventListener("input", async () => {
+  await ensureIndex().catch(() => {});
   const { people, titles } = suggest(qInput.value);
   if (!people.length && !titles.length) { sug.hidden = true; return; }
-  sug.innerHTML = people.map((x) => `<a href="#/p/${encodeURIComponent(x.name)}">&#128100; ${esc(x.name)} <small>${x.n}</small></a>`).join("") +
-    titles.map((m) => `<a href="#/title/${m.id}">${esc(m.t)} <small>${m.y ?? ""}</small></a>`).join("");
+  sug.innerHTML = people.map((x) => `<a href="#/p/${encodeURIComponent(x.name)}">&#128100; <bdi>${esc(x.name)}</bdi> <small>${x.n}</small></a>`).join("") +
+    titles.map((m) => `<a href="#/title/${m.id}"><bdi>${esc(m.t)}</bdi> <small>${m.y ?? ""}</small></a>`).join("");
   sug.hidden = false;
 });
 sug.addEventListener("click", () => { sug.hidden = true; qInput.value = ""; });
-$("#searchForm").addEventListener("submit", (e) => { e.preventDefault(); sug.hidden = true; location.hash = `#/movies?q=${encodeURIComponent(qInput.value)}`; qInput.blur(); });
+$("#searchForm").addEventListener("submit", (e) => { e.preventDefault(); sug.hidden = true; location.hash = `#/all?q=${encodeURIComponent(qInput.value)}`; qInput.blur(); });
 $("#themeBtn").addEventListener("click", () => { const n = document.documentElement.dataset.theme === "dark" ? "light" : "dark"; document.documentElement.dataset.theme = n; localStorage.setItem("ks-theme", n); });
 $("#langBtn").addEventListener("click", () => { setLang(getLang() === "ar" ? "en" : "ar"); route(); });
 window.addEventListener("hashchange", route);

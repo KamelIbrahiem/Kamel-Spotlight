@@ -1,5 +1,6 @@
 import { store } from "./data.js";
 import { isWatched } from "./collections.js";
+import { canonGenre } from "./i18n.js";
 
 export const norm = (s) => (s || "").toLowerCase().normalize("NFKD").replace(/[\u0300-\u036f\u0640\u064b-\u065f]/g, "")
   .replace(/[أإآ]/g, "ا").replace(/ى/g, "ي").replace(/ة/g, "ه");
@@ -10,7 +11,7 @@ export function search(query, limit = Infinity) {
   const out = [];
   for (let i = 0; i < store.movies.length && out.length < limit; i++) {
     const hay = store.index[i];
-    if (words.every((w) => hay.includes(w))) out.push(store.movies[i]);
+    if (!store.movies[i].hd && words.every((w) => hay.includes(w))) out.push(store.movies[i]);
   }
   // A multi-word query is a name or phrase first: when some titles contain the words together, show only those.
   if (words.length > 1 && limit === Infinity) {
@@ -32,10 +33,11 @@ export function suggest(query) {
 }
 
 export const filterAndSort = (list, f) => {
-  let r = list.filter((m) =>
+  let r = list.filter((m) => !m.hd &&
+    (f.ll || f.sub || !m.ll) &&   // Logy/Lia rows live only in their own tab (and Cartoons/Anime), never in the foreign Movies/Series lists
     (!f.type || f.type.includes(m.c)) && (!f.ll || (f.ll === "*" ? !!m.ll : m.ll === f.ll)) && (!f.sub || (["cartoon", "anime"].includes(f.sub) ? m.fl.includes(f.sub) : f.sub === "movie" ? m.c === "arabic-movie" && !m.sb : f.sub === "series" ? m.c === "arabic-series" && !m.sb : m.sb === f.sub)) &&
-    (!f.genre || m.g.includes(f.genre)) &&
-    (!f.quality || m.q === f.quality) && (!f.ramadan || m.rm) && (!f.country || m.co.includes(f.country)) && (!f.rated || m.rd === f.rated) &&
+    (!f.genre || m.g.includes(canonGenre(f.genre))) &&
+    (!f.quality || m.q === f.quality || (m.sq && m.sq[f.quality]) || (f.quality === "3D" && m.fl.includes("3d"))) && (!f.ramadan || (f.ramadan === "1" ? (m.rm || m.rz) : String(m.rz) === f.ramadan)) && (!f.country || m.co.includes(f.country)) && (!f.rated || m.rd === f.rated) &&
     (!f.era || (m.y && m.y >= f.era && m.y < f.era + 10)) &&
     (!f.minRating || (m.r || 0) >= f.minRating) &&
     (!f.watch || (f.watch === "seen") === isWatched(m.id)));

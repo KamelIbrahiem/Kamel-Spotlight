@@ -1,21 +1,36 @@
-import { t } from "./i18n.js";
+import { t, gname } from "./i18n.js";
 import { isWatched, myRating } from "./collections.js";
 export const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
 export const $ = (sel, el = document) => el.querySelector(sel);
 
 export const typeKey = (m) => ({ ev: "tEvening", radio: "tRadio", tvm: "tTvm", play: "tPlay", program: "tProgram" })[m.sb] || ({ play: "tPlay", program: "tProgram", movie: "tMovie", "arabic-movie": "tMovie", series: "tSeries", "arabic-series": "tSeries" })[m.c] || "";
-export const typeTag = (m) => { const k = typeKey(m); return k ? `<span class="tt tt-${m.c.endsWith("series") ? "s" : "m"}">${esc(t(k))}</span>` : ""; };
+const LAN = '<svg class="ri ri-f" viewBox="0 0 24 42" aria-hidden="true"><circle cx="12" cy="2.8" r="1.9" fill="none" stroke="#d4af37" stroke-width="1.2"/><path d="M12 4.7v2" stroke="#d4af37" stroke-width="1.2"/><path d="M12 6.4l3.6 5.2H8.4z" fill="#b8962c"/><path d="M12 6.4l1.8 5.2H12z" fill="#cfa93a"/><rect x="7.4" y="11.4" width="9.2" height="1.3" fill="#6a5314"/><path d="M8 12.7h8l2.3 3.3H5.7z" fill="#9a7b1f"/><path d="M8.60 13.50 L8.94 14.06 L9.50 14.40 L8.94 14.74 L8.60 15.30 L8.26 14.74 L7.70 14.40 L8.26 14.06z" fill="#1a1306"/><path d="M12.00 13.50 L12.34 14.06 L12.90 14.40 L12.34 14.74 L12.00 15.30 L11.66 14.74 L11.10 14.40 L11.66 14.06z" fill="#1a1306"/><path d="M15.40 13.50 L15.74 14.06 L16.30 14.40 L15.74 14.74 L15.40 15.30 L15.06 14.74 L14.50 14.40 L15.06 14.06z" fill="#1a1306"/><rect x="5.7" y="15.9" width="12.6" height="1.5" fill="#6a5314"/><path d="M6.4 17.4h11.2l-.5 15.2H6.9z" fill="#1a1306"/><path d="M7.3 18.4l2.4-.4-.1 13.4H7.6z" fill="#f57c00"/><path d="M10.2 18h3.6v13.4h-3.6z" fill="#0fa3b5"/><path d="M14.3 18l2.4.4-.3 13h-2.1z" fill="#e53935"/><path d="M12 19.2l1.2 1.8-1.2 1.8-1.2-1.8z" fill="#fdd835"/><path d="M12 24l1.2 1.8L12 27.6l-1.2-1.8z" fill="#e53935"/><path d="M10.6 29.4h2.8v1.4h-2.8z" fill="#fdd835"/><path d="M8 20.2h.9M8 22.6h.9M8 25h.9M8 27.4h.9M15.3 20.2h.9M15.3 22.6h.9M15.3 25h.9M15.3 27.4h.9" stroke="#fdd835" stroke-width="1.1"/><path d="M10 18v13.4M14 18v13.4" stroke="#b8962c" stroke-width=".8"/><rect x="6.2" y="32.4" width="11.6" height="1.5" fill="#6a5314"/><path d="M6.6 33.9h10.8l3.9 5.6H2.7z" fill="#9a7b1f"/><path d="M12 33.9h5.4l3.9 5.6H12z" fill="#b8962c"/><path d="M8.00 35.20 L8.30 35.70 L8.80 36.00 L8.30 36.30 L8.00 36.80 L7.70 36.30 L7.20 36.00 L7.70 35.70z" fill="#1a1306"/><path d="M12.00 34.60 L12.30 35.10 L12.80 35.40 L12.30 35.70 L12.00 36.20 L11.70 35.70 L11.20 35.40 L11.70 35.10z" fill="#1a1306"/><path d="M16.00 35.20 L16.30 35.70 L16.80 36.00 L16.30 36.30 L16.00 36.80 L15.70 36.30 L15.20 36.00 L15.70 35.70z" fill="#1a1306"/><path d="M5.80 37.60 L6.03 37.97 L6.40 38.20 L6.03 38.43 L5.80 38.80 L5.57 38.43 L5.20 38.20 L5.57 37.97z" fill="#1a1306"/><path d="M9.60 37.40 L9.83 37.77 L10.20 38.00 L9.83 38.23 L9.60 38.60 L9.37 38.23 L9.00 38.00 L9.37 37.77z" fill="#1a1306"/><path d="M14.40 37.40 L14.63 37.77 L15.00 38.00 L14.63 38.23 L14.40 38.60 L14.17 38.23 L13.80 38.00 L14.17 37.77z" fill="#1a1306"/><path d="M18.20 37.60 L18.43 37.97 L18.80 38.20 L18.43 38.43 L18.20 38.80 L17.97 38.43 L17.60 38.20 L17.97 37.97z" fill="#1a1306"/><rect x="2.4" y="39.4" width="19.2" height="1.3" rx=".4" fill="#6a5314"/></svg>';
+const CRE = '<svg class="ri" viewBox="0 0 24 24" width="1em" height="1em" fill="currentColor" aria-hidden="true"><path d="M15 3a9 9 0 1 0 6 15.5A8 8 0 0 1 15 3z"/></svg>';
+const LIN = LAN.slice(LAN.indexOf(">") + 1, LAN.lastIndexOf("</svg>"));
+const MOON = (t) => `<path transform="${t}" d="M2.5 2.5A9.5 9.5 0 0 0 21.5 2.5A10 6 0 0 1 2.5 2.5z" fill="#d4af37"/>`;
+const COMBO_A = `<svg class="ri ri-f ri-a" viewBox="0 0 24 52" aria-hidden="true">${MOON("translate(0 0)")}<g transform="translate(0 9.2)">${LIN}</g></svg>`;
+const COMBO_B = `<svg class="ri ri-f ri-b" viewBox="0 0 34 42" aria-hidden="true"><g transform="translate(0 0)">${LIN}</g><path d="M28 3.2a6.2 6.2 0 1 0 3.6 11.3A5 5 0 0 1 28 3.2z" fill="#d4af37"/><path d="M30.4 15.6l.5 1.2 1.2.5-1.2.5-.5 1.2-.5-1.2-1.2-.5 1.2-.5z" fill="#d4af37"/></svg>`;
+const COMBO_C3 = `<svg class="ri ri-f ri-c2" viewBox="0 0 42 46" aria-hidden="true"><defs><mask id="rmk3"><rect width="42" height="46" fill="#fff"/><circle cx="23" cy="22.5" r="14.5" fill="#000"/></mask></defs><g transform="rotate(-10 17 24)"><circle cx="17" cy="24" r="17" fill="#d4af37" mask="url(#rmk3)"/></g><g transform="translate(16 2)">${LIN}</g></svg>`;
+const COMBO_C2 = `<svg class="ri ri-f ri-c2" viewBox="0 0 40 46" aria-hidden="true"><defs><mask id="rmk2"><rect width="40" height="46" fill="#fff"/><circle cx="19.5" cy="22" r="11" fill="#000"/></mask></defs><g transform="rotate(-28 14 30)"><circle cx="14" cy="30" r="13.5" fill="#d4af37" mask="url(#rmk2)"/></g><g transform="translate(14 2) scale(1)">${LIN}</g></svg>`;
+const COMBO_C = `<svg class="ri ri-f ri-c" viewBox="0 0 40 44" aria-hidden="true"><defs><mask id="rmk"><rect width="40" height="44" fill="#fff"/><circle cx="25.5" cy="21" r="15.5" fill="#000"/></mask></defs><circle cx="20" cy="22" r="19" fill="#d4af37" mask="url(#rmk)"/><g transform="translate(17.4 5.5) scale(.74)">${LIN}</g></svg>`;
+const COMBO_D = LAN.replace("</svg>", '<rect x="10.2" y="18.2" width="3.6" height="5.6" fill="#0fa3b5"/><path d="M12.9 19a2.9 2.9 0 1 0 0 4.9a2.3 2.3 0 0 1 0-4.9z" fill="#fff3c4"/></svg>');
+const _ic = new URLSearchParams(location.search).get("ic");
+export const RI = _ic === "c2" ? COMBO_C2 : _ic === "c" ? COMBO_C : _ic === "d" ? COMBO_D : _ic === "a" ? COMBO_A : _ic === "b" ? COMBO_B : _ic === "l" ? LAN : _ic === "m" ? CRE : COMBO_C3;
+export const typeTag = (m) => { const k = typeKey(m); return k ? `<span class="tt tt-${m.c.endsWith("series") ? "s" : "m"}">${esc(t(k))}${m.rz ? ` \u00b7 ${RI} ${m.rz}` : ""}</span>` : ""; };
+const nSeasons = (m) => (m.c.endsWith("series") ? Math.max(m.sn || 0, Array.isArray(m.ss) ? m.ss.length : 0) : 0);
+const seasonYears = (m) => (Array.isArray(m.ss) && m.ss.length > 1 && m.ss[0].y && m.ss[m.ss.length - 1].y ? m.ss[0].y + "\u2013" + m.ss[m.ss.length - 1].y : (m.y ?? ""));
+const seasonCount = (m) => (nSeasons(m) > 1 ? ` \u00b7 ${nSeasons(m)} ${t("seasonsN")}` : "");
 export function card(m) {
   const img = m.p ? `<img loading="lazy" src="${esc(m.p)}" alt="" onerror="this.remove()">` : "";
   return `<a class="card" href="#/title/${m.id}" data-id="${m.id}">
-    <div class="poster"><span class="ph">${esc(m.t)}</span>${img}${typeTag(m)}
+    <div class="poster"><span class="ph${!m.p && (m.sb === "ev" || m.sb === "radio" || m.sb === "program" || m.tc) ? " tc" : ""}" dir="auto">${esc(m.t)}</span>${img}${typeTag(m)}
       ${m.r ? `<span class="badge">&#9733; ${m.r.toFixed(1)}</span>` : ""}${m.q ? `<span class="q">${esc(m.q)}</span>` : ""}${isWatched(m.id) ? `<span class="seen">&#10003;</span>` : ""}${myRating(m.id) ? `<span class="mine">&#9733;${myRating(m.id)}</span>` : ""}</div>
-    <div class="ct">${esc(m.t)}</div><div class="cy">${m.y ?? ""}${m.rd && m.rd !== "N/A" ? ` · <b class="cq">${esc(m.rd)}</b>` : ""}</div><div class="cg">${m.g.slice(0, 2).map(esc).join(" · ")}</div></a>`;
+    <div class="ct" dir="auto">${esc(m.t)}</div><div class="cy">${seasonYears(m)}${seasonCount(m)}${m.rd && m.rd !== "N/A" ? ` · <b class="cq">${esc(m.rd)}</b>` : ""}</div><div class="cg">${m.g.slice(0, 2).map((g) => esc(gname(g))).join(" · ")}</div></a>`;
 }
 export const grid = (list) => `<div class="grid">${list.map(card).join("")}</div>`;
 export const row = (title, list, link = "") =>
   `<section class="sec"><h2>${esc(title)}${link ? ` <a href="${link}">&#8250;</a>` : ""}</h2><div class="hrow">${list.map(card).join("")}</div></section>`;
-export const chips = (arr, kind) => arr.map((g) => `<a class="chip" href="#/${kind}/${encodeURIComponent(g)}">${esc(g)}</a>`).join("");
+export const chips = (arr, kind) => arr.map((g) => `<a class="chip" href="#/${kind}/${encodeURIComponent(g)}">${esc(kind === "g" ? gname(g) : g)}</a>`).join("");
 export const bars = (pairs) => {
   const max = Math.max(...pairs.map((p) => p[1]), 1);
   return `<div class="bars">${pairs.map(([k, v]) => `<div class="bar"><span>${esc(k)}</span><i style="width:${(v / max) * 100}%"></i><b>${v}</b></div>`).join("")}</div>`;

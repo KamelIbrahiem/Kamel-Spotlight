@@ -1,38 +1,42 @@
 import { store, loadStats, loadHealth, loadDetails, loadCollections } from "./data.js";
 import { search, filterAndSort } from "./search.js";
 import { CONFIG } from "./config.js";
-import { t, getLang } from "./i18n.js";
+import { t, getLang, gname } from "./i18n.js";
 import { favorites, isFav, backend } from "./collections.js";
-import { card, grid, row, chips, bars, esc, typeTag } from "./ui.js";
+import { card, grid, row, chips, bars, esc, typeTag, typeKey, RI } from "./ui.js";
 import { similar, ratingWidget, funStats, hub } from "./features.js";
 import { isWatched, backend as _b } from "./collections.js";
 
+const sqRange = (a) => { const r = []; let s = a[0], p = a[0]; for (const n of a.slice(1).concat([null])) { if (n === p + 1) { p = n; continue; } r.push(s === p ? String(s) : s + "-" + p); s = p = n; } return r.join(","); };
+const sqText = (m) => m.sq ? Object.entries(m.sq).sort((x, y) => x[1][0] - y[1][0]).map(([q, a]) => `<a class="chip" href="#/all?quality=${encodeURIComponent(q)}">${getLang() === "ar" ? "\u062c" : "S"}${sqRange(a)} ${esc(q)}</a>`).join(" \u00b7 ") : "";
 const TYPES = { all: null, movies: ["movie", "arabic-movie"], series: ["series", "arabic-series"], arabic: ["arabic-movie", "arabic-series", "play", "program"], plays: ["play"], programs: ["program"] };
 const top = (list, n = 20) => list.filter((m) => m.v > 2000).sort((a, b) => b.r - a.r).slice(0, n);
 const pick = (list) => list[Math.floor(Math.random() * list.length)];
 
 export function home() {
-  const all = store.movies;
+  const all = store.movies.filter((m) => !m.ll);
   const gen = {};
   for (const m of all) for (const g of m.g) gen[g] = (gen[g] || 0) + 1;
   const genres = Object.entries(gen).sort((a, b) => b[1] - a[1]).slice(0, 14);
   const isSer = (m) => m.c === "series" || m.c === "arabic-series";
   const movies = all.filter((m) => !isSer(m) && m.c !== "other"), series = all.filter(isSer);
   const tonight = pick(top(movies, 300));   // hero comes from movies only; the type tag is shown on it
-  return `<section class="hero"><div><small>${t("pickTitle")}</small><h1>${esc(tonight.t)} <em>${tonight.y ?? ""}</em></h1>
-      <p>${typeTag(tonight)} ${tonight.g.map(esc).join(" · ")}${tonight.r ? ` · &#9733; ${tonight.r.toFixed(1)}` : ""}</p>
+  return `<section class="hero"><div><small>${t("pickTitle")}</small><h1 dir="auto">${esc(tonight.t)} <em>${tonight.y ?? ""}</em></h1>
+      <p>${typeTag(tonight)} ${tonight.g.map((g) => esc(gname(g))).join(" · ")}${tonight.r ? ` · &#9733; ${tonight.r.toFixed(1)}` : ""}</p>
       <a class="btn" href="#/title/${tonight.id}">&#9654; ${t("details")}</a> <a class="btn ghost" href="#/discover">${t("discover")}</a></div>
       ${tonight.p ? `<img src="${esc(tonight.p)}" alt="" onerror="this.remove()">` : ""}</section>
     ${row(t("topMovies"), top(movies), "#/movies?sort=rated")}
     ${row(t("topSeries"), top(series), "#/series?sort=rated")}
     ${row(t("recentMovies"), movies.slice(-20).reverse(), "#/movies")}
     ${row(t("recentSeries"), series.slice(-20).reverse(), "#/series")}
-    <section class="sec"><h2>${t("genres")}</h2><div class="chips">${genres.map(([g, n]) => `<a class="chip" href="#/movies?genre=${encodeURIComponent(g)}">${esc(g)} <small>${n}</small></a>`).join("")}</div></section>`;
+    <section class="sec"><h2>${t("genres")}</h2><div class="chips">${genres.map(([g, n]) => `<a class="chip" href="#/movies?genre=${encodeURIComponent(g)}">${esc(gname(g))} <small>${n}</small></a>`).join("")}</div></section>`;
 }
 
 // Library: search + filters, URL-driven so links are shareable.
 export function library(kind, params) {
-  const f = { type: TYPES[kind], country: params.get("country") || "", ramadan: params.get("ramadan") || "", rated: params.get("rated") || "", genre: params.get("genre") || "", quality: params.get("quality") || "",
+  const T2 = kind === "all" ? params.get("type") || "" : "";
+  const LT = kind === "logy" ? params.get("type") || "" : "";   // Logy & Lia tab: All / Movies / Series
+  const f = { type: kind === "all" && TYPES[T2] ? TYPES[T2] : kind === "logy" && ["movies", "series"].includes(LT) ? TYPES[LT] : TYPES[kind], country: params.get("country") || "", ramadan: params.get("ramadan") || "", rated: params.get("rated") || "", genre: params.get("genre") || "", quality: params.get("quality") || "",
     sub: kind === "arabic" ? params.get("sub") || "" : ({ cartoons: "cartoon", anime: "anime" })[kind] || "", ll: kind === "logy" ? params.get("sub") || "*" : "", era: +params.get("era") || 0, minRating: +params.get("min") || 0, sort: params.get("sort") || "", watch: params.get("watch") || "" };
   const q = params.get("q") || "";
   const filtered = !!(q || f.genre || f.quality || f.era || f.minRating || f.country || f.rated || f.ramadan || f.watch || (f.sub && kind === "arabic") || (kind === "logy" && f.ll !== "*"));
@@ -40,9 +44,10 @@ export function library(kind, params) {
   const base = q ? search(q) : store.movies;
   const list = filterAndSort(base, f);
   const genres = [...new Set(store.movies.flatMap((m) => m.g))].sort();
-  const quals = ["2160p", "1080p", "720p", "3D"];
+  const quals = ["2160p", "1080p", "720p", "HD", "3D"];
+  const ramYears = [...new Set(store.movies.filter((m) => m.rz).map((m) => m.rz))].sort((x, y) => y - x);
   const eras = [2020, 2010, 2000, 1990, 1980, 1970, 1960, 1950, 1940];
-  const sel = (name, label, opts, cur) => `<select data-p="${name}"><option value="">${label}</option>${opts.map(([v, l]) => `<option value="${esc(v)}" ${String(v) === String(cur) ? "selected" : ""}>${esc(l)}</option>`).join("")}</select>`;
+  const sel = (name, label, opts, cur) => `<select data-p="${name}" aria-label="${esc(label)}"><option value="">${label}</option>${opts.map(([v, l]) => `<option value="${esc(v)}" ${String(v) === String(cur) ? "selected" : ""}>${esc(l)}</option>`).join("")}</select>`;
   const page = +params.get("page") || 1;
   const shown = list.slice(0, page * CONFIG.pageSize);
   const SUBS = [["", "all"], ["movie", "movies"], ["series", "series"], ["play", "plays"], ["program", "programs"], ["ev", "evenings"], ["radio", "radioSeries"], ["tvm", "tvMovies"]];
@@ -50,34 +55,41 @@ export function library(kind, params) {
   const subCount = (v) => v ? filterAndSort(abase, { sub: v }).length : abase.length;
   const subBar = kind === "arabic" ? `<div class="subbar">${SUBS.map(([v, k]) => { const p = new URLSearchParams(params); p.delete("page"); v ? p.set("sub", v) : p.delete("sub"); return `<a class="chip ${f.sub === v ? "on" : ""}" href="#/${kind}${p.toString() ? "?" + p : ""}">${t(k)} <small>${subCount(v).toLocaleString()}</small></a>`; }).join("")}</div>` : "";
   const LS = [["*", "all"], ["de", "german"], ["en", "english"]];
-  const lbase = kind === "logy" ? store.movies.filter((m) => m.ll) : [];
+  const lbase = kind === "logy" ? store.movies.filter((m) => m.ll && !m.hd) : [];
   const lcount = (v) => v === "*" ? lbase.length : lbase.filter((m) => m.ll === v).length;
   const lBar = kind === "logy" ? `<div class="subbar">${LS.map(([v, k]) => { const p = new URLSearchParams(params); p.delete("page"); v === "*" ? p.delete("sub") : p.set("sub", v); return `<a class="chip ${f.ll === v ? "on" : ""}" href="#/logy${p.toString() ? "?" + p : ""}">${t(k)} <small>${lcount(v).toLocaleString()}</small></a>`; }).join("")}</div>` : "";
-  return `${subBar}${lBar}<div class="filters" data-kind="${kind}">
-    ${sel("genre", t("genre"), genres.map((g) => [g, g]), f.genre)}
+  const ltc = (k) => lbase.filter((m) => (f.ll === "*" || m.ll === f.ll) && (!TYPES[k] || TYPES[k].includes(m.c))).length;
+  const ltBar = kind === "logy" ? `<div class="subbar">${[["", "all"], ["movies", "movies"], ["series", "series"]].map(([v, k]) => { const p = new URLSearchParams(params); p.delete("page"); v ? p.set("type", v) : p.delete("type"); return `<a class="chip ${LT === v ? "on" : ""}" href="#/logy${p.toString() ? "?" + p : ""}">${t(k)} <small>${ltc(v || "all").toLocaleString()}</small></a>`; }).join("")}</div>` : "";
+  const tcount = (k) => filterAndSort(base, { ...f, type: TYPES[k], sort: "" }).length;
+  const typeBar = kind === "all" && q ? `<div class="subbar">${[["", "all"], ["movies", "movies"], ["series", "series"], ["plays", "plays"], ["programs", "programs"]].map(([v, k]) => { const p = new URLSearchParams(params); p.delete("page"); v ? p.set("type", v) : p.delete("type"); return `<a class="chip ${T2 === v ? "on" : ""}" href="#/all?${p}">${t(k)} <small>${tcount(v || "all").toLocaleString()}</small></a>`; }).join("")}</div>` : "";
+  const nAct = ["genre", "quality", "era", "minRating", "watch", "ramadan"].filter((k) => f[k]).length;
+  return `${subBar}${lBar}${ltBar}${typeBar}<button class="fbtn" type="button" data-fbtn>&#9776; ${t("filtersBtn")}${nAct ? ` <b>${nAct}</b>` : ""}</button><div class="filters" data-kind="${kind}">
+    ${sel("genre", t("genre"), genres.map((g) => [g, gname(g)]), f.genre)}
     ${sel("quality", t("quality"), quals.map((x) => [x, x]), f.quality)}
+    ${sel("ramadan", t("ramadan"), [["1", t("all")], ...ramYears.map((y) => [y, y])], f.ramadan)}
     ${sel("era", t("era"), eras.map((e) => [e, e + "s"]), f.era || "")}
     ${sel("min", t("minRating"), [9, 8, 7, 6, 5].map((x) => [x, x + "+"]), f.minRating || "")}
     ${sel("watch", t("watchState"), [["seen", t("watched")], ["unseen", t("unwatched")]], f.watch)}
     ${sel("sort", t("sort"), [["rated", t("sortRated")], ["votes", t("sortVotes")], ["new", t("sortNew")], ["old", t("sortOld")], ["az", t("sortAZ")]], f.sort)}
     <a class="reset" href="#/${kind}${q ? "?q=" + encodeURIComponent(q) : ""}">${t("reset")}</a></div>
-    ${["country", "rated", "ramadan"].filter((k) => f[k]).map((k) => `<span class="chip on">${esc(f[k])}</span>`).join(" ")}
-    <p class="count">${q ? `&ldquo;${esc(q)}&rdquo; · ` : ""}${list.length.toLocaleString()} ${t("results")}</p>
+    ${["country", "rated", "ramadan", "genre", "quality", "era", "minRating", "watch"].filter((k) => f[k]).map((k) => `<span class="chip on">${esc(k === "genre" ? gname(f[k]) : k === "ramadan" ? "{{ri}} " + t("ramadan") + (f[k] === "1" ? "" : " " + f[k]) : k === "era" ? f[k] + "s" : k === "minRating" ? f[k] + "+" : k === "watch" ? (f[k] === "seen" ? t("watched") : t("unwatched")) : f[k]).replace("{{ri}}", RI)}</span>`).join(" ")}
+    <p class="count">${q ? `&ldquo;<bdi>${esc(q)}</bdi>&rdquo; · ` : ""}${list.length.toLocaleString()} ${t("results")}</p>
     ${list.length ? grid(shown) : `<p class="empty">${t("none")}</p>`}
     ${shown.length < list.length ? `<button class="btn more" data-more="${page + 1}">${t("loadMore")}</button>` : ""}`;
 }
 
 export async function person(name) {
-  const l = store.movies.filter((m) => m.a.includes(name) || m.d.includes(name) || m.w.includes(name)).sort((a, b) => (b.y || 0) - (a.y || 0));
+  const l = store.movies.filter((m) => m.a.includes(name) || (m.h || []).includes(name) || m.d.includes(name) || m.w.includes(name)).sort((a, b) => (b.y || 0) - (a.y || 0));
   const A = await fetch(`${CONFIG.dataPath}/actors.json`).then((r) => r.json()).catch(() => ({}));
   const a = A[name] || {};
   const photo = a.i ? `<img class="pphoto" src="${esc(a.i)}" alt="${esc(name)}" onerror="this.remove()">` : "";
   const src = a.s === "workbook" ? `${t("photo")}: ${esc(a.cr || "")}` : a.s === "wikipedia" ? `${t("photo")}: Wikimedia Commons` : a.s === "tmdb" ? `${t("photo")}: TMDB` : "";
-  const bio = a.b ? `<p class="bio">${esc(a.b)}</p><p class="bsrc">${t("bioFrom")} <a href="${esc(a.u)}" target="_blank" rel="noopener">Wikipedia (${a.l === "ar" ? "العربية" : "English"})</a>, CC BY-SA${src ? " · " + src : ""}</p>` : (src ? `<p class="bsrc">${src}</p>` : "");
-  return `<div class="phead">${photo}<div><h1 class="pt">${esc(name)}</h1><p class="count">${l.length} ${t("titles")}</p>${bio}</div></div>${grid(l)}`;
+  const bio = a.b ? `<p class="bio" style="white-space:pre-line">${esc(a.b)}</p>${a.s === "imdb" && !a.u ? `<p class="bsrc">${t("bioFrom")} IMDb</p>` : ""}${a.u ? `<p class="bsrc">${t("bioFrom")} <a href="${esc(a.u)}" target="_blank" rel="noopener">Wikipedia (${a.l === "ar" ? "العربية" : "English"})</a>, CC BY-SA${src ? " · " + src : ""}</p>` : ""}` : (src ? `<p class="bsrc">${src}</p>` : "");
+  return `<div class="phead">${photo}<div><h1 class="pt" dir="auto">${esc(name)}</h1><p class="count">${l.length} ${t("titles")}</p>${bio}</div></div>${grid(l)}`;
 }
 
 export async function title(id) {
+  if (store.movies[id]?.hd != null) id = store.movies[id].hd;
   const m = store.movies[id]; if (!m) return `<p class="empty">${t("none")}</p>`;
   const d = await loadDetails(id);
   const sim = similar(m);
@@ -85,25 +97,26 @@ export async function title(id) {
   const parts = (C?.franchises || []).map((f, i) => [f, i]).filter(([f]) => f.ids.includes(id));
   const yt = `https://www.youtube.com/results?search_query=${encodeURIComponent(`${m.t} ${m.y ?? ""} official trailer`)}`;
   const link = (label, qs) => `<a class="chip" href="#/all?${qs}">${esc(label)}</a>`;
-  const kws = (d.kw || "").split(",").map((x) => x.trim()).filter(Boolean);
+  const kws = (d.kw || "").split(/[,\u060c;\u061b]/).map((x) => x.trim()).filter(Boolean);
   const info = [
     [t("release"), esc(d.rel)], [t("runtime"), m.rt ? `${m.rt} ${t("min")}` : ""],
     [t("country"), m.co.map((c) => link(c, "country=" + encodeURIComponent(c))).join("")],
     [t("rated"), d.rated ? link(d.rated, "rated=" + encodeURIComponent(d.rated)) : ""],
     [t("boxOffice"), esc(d.bo)], [t("awards"), esc(d.aw)],
-    [t("quality"), m.q ? link(m.q, "quality=" + encodeURIComponent(m.q)) : ""],
-    [t("seasons"), Array.isArray(d.seasons) && d.seasons.length ? d.seasons.join(", ") : ""], [t("episodes"), m.ep ? String(m.ep) : ""], [t("ramadan"), m.rm ? link(t("ramadan"), "ramadan=1") : ""], [t("language"), esc(m.lg)], [t("spoken"), esc(d.spoken)], [t("mediaType"), link(m.c.includes("series") ? t("seriesOne") : t("movie"), "")],
-    [t("contentType"), esc(m.c)],
+    [t("quality"), sqText(m) || (m.q ? link(m.q, "quality=" + encodeURIComponent(m.q)) : "") + (m.fl.includes("3d") && m.q !== "3D" ? (m.q ? " \u00b7 " : "") + link("3D", "quality=3D") : "")],
+    [t("seasons"), Array.isArray(d.seasons) && d.seasons.length ? d.seasons.join(", ") : ""], [t("episodes"), m.ep && m.c.includes("series") ? String(m.ep) : ""], [t("ramadan"), m.rz ? link(t("ramadan") + " " + m.rz + " (" + m.rh + " \u0647\u0640)", "ramadan=" + m.rz) : (m.rm ? link(t("ramadan"), "ramadan=1") : "")], [t("language"), esc(m.lg)], [t("spoken"), esc(d.spoken)], [t("mediaType"), m.sb && typeKey(m) ? esc(t(typeKey(m))) : link(m.c.includes("series") ? t("seriesOne") : t("movie"), "")],
+    [t("contentType"), esc(typeKey(m) ? t(typeKey(m)) : t("other-t"))],
     ["IMDb ID", d.imdb ? `<a href="https://www.imdb.com/title/${esc(d.imdb)}/" target="_blank" rel="noopener">${esc(d.imdb)}</a>` : ""],
     ["TMDb ID", d.tmdb ? esc(d.tmdb) : ""], [t("notes"), esc(d.notes)],
   ].filter((r) => r[1]);
   const bdUrl = d.bd ? "https://image.tmdb.org/t/p/w1280" + d.bd : "";
   const hero = `<div class="bdrop">${m.p ? `<div class="bd-blur" style="background-image:url('${esc(m.p)}')"></div>` : ""}${bdUrl ? `<div class="bd-img" style="background-image:url('${esc(bdUrl)}')"></div>` : ""}<div class="bd-fade"></div></div>`;
   return `<article class="detail">${hero}<div class="dhead">${m.p ? `<img class="dposter" src="${esc(m.p)}" alt="" onerror="this.remove()">` : ""}
-    <div><h1>${esc(m.t)} <em>${m.y ?? ""}</em></h1>${m.o ? `<p class="orig">${esc(m.o)}</p>` : ""}
+    <div><h1 dir="auto">${esc(m.t)} <em dir="ltr">${Array.isArray(m.ss) && m.ss.length > 1 ? m.ss[0].y + "\u2013" + m.ss[m.ss.length - 1].y : (m.y ?? "")}</em></h1>${m.o ? `<p class="orig" dir="auto">${esc(m.o)}</p>` : ""}${m.pc ? `<p class="orig">${t("photo")}: Wikimedia Commons (${esc(m.pc)})</p>` : ""}
     <p class="meta">${m.r ? `<span class="rate">&#9733; ${m.r.toFixed(1)}</span> <small>(${(m.v || 0).toLocaleString()} ${t("imdbVotes")})</small>` : ""} ${m.rt ? `${m.r ? " · " : ""}${m.rt} ${t("min")}` : ""}</p>
     <div class="chips">${chips(m.g, "g")}</div>${ratingWidget(id)}${parts.length ? `<div class="chips">${parts.map(([f, i]) => `<a class="chip gold" href="#/collections/f/${i}">&#128218; ${esc(getLang() === "ar" && f.ar ? f.ar : f.n)}</a>`).join("")}</div>` : ""}
     <p><a class="btn" href="${yt}" target="_blank" rel="noopener">&#9654; ${t("trailer")}</a> <button class="btn ghost ${isWatched(id) ? "on" : ""}" data-watch="${id}">${isWatched(id) ? "&#10003; " + t("watchedOne") : "&#9744; " + t("markWatched")}</button> <button class="btn ghost" data-fav="${id}">${isFav(id) ? "&#9829; " + t("faved") : "&#9825; " + t("fav")}</button> <button class="btn ghost" data-addlist="${id}">+ ${t("addToList")}</button></p></div></div>
+    ${Array.isArray(m.ss) && m.ss.length ? `<h3>${t("seasons")}</h3><div class="sstrip">${m.ss.map((s) => `<div class="ss"><div class="ssp">${s.p ? `<img src="${esc(s.p)}" alt="" loading="lazy" onerror="this.remove()">` : `<span dir="auto">${esc(m.t)}</span>`}</div><b>${getLang() === "ar" ? "\u062c" : "S"}${s.n}</b><small>${s.y ?? ""}</small></div>`).join("")}</div>` : ""}
     ${d.plot ? (getLang() === "ar" && d.plot_ar ? `<h3>${t("plot")}</h3><p class="plot" dir="rtl">${esc(d.plot_ar)}</p><p class="mt-note">${t("machineTr")}</p>` : `<h3>${t("plot")}</h3><p class="plot">${esc(d.plot)}</p>`) : ""}
     ${Array.isArray(d.qt) && d.qt.length ? `<h3>${t("quote")}</h3>${d.qt.map((x) => `<blockquote class="quote" ${x.lang === "ar" ? 'dir="rtl"' : ""}><p>&ldquo;${esc(x.q)}&rdquo;</p><footer>${x.who ? "&mdash; " + esc(x.who) + " &middot; " : ""}${(x.src || []).map((s) => `<a href="${esc(s[1])}" target="_blank" rel="noopener">${esc(s[0])}</a>`).join(" &middot; ")}</footer></blockquote>`).join("")}` : ""}
     <h3>${t("cast")}</h3><div class="chips">${chips(m.a, "p")}</div>
@@ -122,20 +135,21 @@ export function discover(kind) {
   return `${hub()}<section class="disc"><div class="dbtns"><a class="btn ${k === "movie" ? "" : "ghost"}" href="#/discover/movie">${t("randomMovie")}</a>
     <a class="btn ${k === "series" ? "" : "ghost"}" href="#/discover/series">${t("randomSeries")}</a>
     <a class="btn ${k === "arabic" ? "" : "ghost"}" href="#/discover/arabic">${t("randomArabic")}</a></div>
-    ${m ? `<div class="pick">${card(m)}<p>${m.g.map(esc).join(" · ")}</p><a class="btn" href="#/discover/${k}?r=${Math.random()}">&#8635; ${t("another")}</a></div>` : `<p class="empty">${t("none")}</p>`}</section>`;
+    ${m ? `<div class="pick">${card(m)}<p>${m.g.map((g) => esc(gname(g))).join(" · ")}</p><a class="btn" href="#/discover/${k}?r=${Math.random()}">&#8635; ${t("another")}</a></div>` : `<p class="empty">${t("none")}</p>`}</section>`;
 }
 
 export function company(name) {
   const l = store.movies.filter((m) => m.pr.includes(name)).sort((a, b) => (b.y || 0) - (a.y || 0));
-  return `<h1 class="pt">${esc(name)}</h1><p class="count">${l.length} ${t("titles")}</p>${grid(l)}`;
+  return `<h1 class="pt" dir="auto">${esc(name)}</h1><p class="count">${l.length} ${t("titles")}</p>${grid(l)}`;
 }
 
 export async function stats() {
   const s = await loadStats();
   return `<h1 class="pt">${t("stats")}</h1><div class="kpis"><div><b>${s.total.toLocaleString()}</b>${t("total")}</div>
+    <div><b>${((s.by_type.movie || 0) + (s.by_type["arabic-movie"] || 0)).toLocaleString()}</b>${t("allMovies")}</div><div><b>${((s.by_type.series || 0) + (s.by_type["arabic-series"] || 0)).toLocaleString()}</b>${t("allSeries")}</div>
     ${Object.entries(s.by_type).map(([k, v]) => `<div><b>${v.toLocaleString()}</b>${t(k + "-t") === k + "-t" ? esc(k) : t(k + "-t")}</div>`).join("")}</div>
     ${await funStats()}<p class="count">${t("built")}: ${s.built} · ${s.duplicates_removed} ${t("dupes")}</p>
-    <h3>${t("topGenres")}</h3>${bars(s.top_genres)}<h3>${t("topActors")}</h3>${bars(s.top_actors)}
+    <h3>${t("topGenres")}</h3>${bars(s.top_genres.map(([g, n]) => [gname(g), n]))}<h3>${t("topActors")}</h3>${bars(s.top_actors)}
     <h3>${t("topDirectors")}</h3>${bars(s.top_directors)}<h3>${t("countries")}</h3>${bars(s.countries)}
     <h3>${t("decades")}</h3>${bars(s.decades)}<h3>${t("ratings")}</h3>${bars(s.ratings.map(([k, v]) => [k + "+", v]))}`;
 }
@@ -183,7 +197,7 @@ export async function collectionsView(kind, key) {
   const sect = (kindKey, label) => { const l = C.franchises.map((f, i) => [f, i]).filter(([f]) => f.k === kindKey); return l.length ? `<section class="sec"><h2>${label}</h2><div class="ftiles">${l.map(([f, i]) => tileOf(f, i)).join("")}</div></section>` : ""; };
   return `${cm ? row(`${t("thisMonth")}: ${nm(cm)}`, byIds(cm.ids).slice(0, 20), `#/collections/m/${cur}`) : ""}
     <section class="sec"><h2>${t("months")}</h2><div class="chips">${chipsM}</div></section>
-    ${sect("place", t("placeWorlds"))}${sect("saga", t("franchises"))}${sect("author", t("authorWorlds"))}${sect("director", t("directorWorlds"))}${sect("actor", t("starWorlds"))}${sect("topic", t("topicWorlds"))}`;
+    ${sect("ramadan", t("ramadanWorlds"))}${sect("place", t("placeWorlds"))}${sect("saga", t("franchises"))}${sect("author", t("authorWorlds"))}${sect("director", t("directorWorlds"))}${sect("actor", t("starWorlds"))}${sect("topic", t("topicWorlds"))}`;
 }
 export async function monthRow() {
   const C = await loadCollections(), k = String(new Date().getMonth() + 1), m = C.months[k];

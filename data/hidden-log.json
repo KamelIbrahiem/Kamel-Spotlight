@@ -1,0 +1,51 @@
+[
+ {
+  "id": 13152,
+  "title": "Mohamad",
+  "source": "Logy/Lia workbook \"Movies\" B194 / \"All Movies\" B469",
+  "reason": "Kamel 3:42 PM: remove completely (Logy/Lia, unimportant)",
+  "hd": "self (hidden, reversible: delete the hd key)"
+ },
+ {
+  "id": 13163,
+  "title": "Ali Baba",
+  "source": "Logy/Lia workbook \"Movies\" B350 / \"All Movies\" B810",
+  "reason": "Kamel 3:42 PM: remove completely (Logy/Lia, unimportant)",
+  "hd": "self (hidden, reversible: delete the hd key)"
+ },
+ {
+  "id": 13185,
+  "title": "The Worst Witch",
+  "source": "Logy/Lia workbook \"Series\" B57",
+  "reason": "Kamel 3:42 PM: remove completely (Logy/Lia, unimportant)",
+  "hd": "self (hidden, reversible: delete the hd key)"
+ },
+ {
+  "id": 13031,
+  "title": "90 Minutes in Heaven",
+  "source": "English workbook \"All Movies\" B101 (same cell as row 91; cell text merged with Kandahar)",
+  "reason": "Duplicate of 91 (same film tt4337690, 720p); hidden in audit v1.98",
+  "hd": "91 (reversible: delete the hd key)"
+ },
+ {
+  "id": 2888,
+  "title": "Lara Croft: Tomb Raider (Duology folder 720p)",
+  "source": "English workbook (Lara Croft - Duology.2001.2003)",
+  "reason": "Same-language duplicate of 2889 (2160p); higher quality kept; hidden in audit v1.98",
+  "hd": "2889 (reversible: delete the hd key)"
+ },
+ {
+  "id": 10464,
+  "title": "دعوة للمرح فقرات ومنوعات",
+  "source": "Arabic TV workbook (file-5eae45ac), evenings tab",
+  "reason": "Kamel 8:34 PM: remove from the site",
+  "hd": "self (hidden, reversible: delete the hd key)"
+ },
+ {
+  "id": 10561,
+  "title": "الجيل قلى جاى",
+  "source": "Arabic TV workbook (file-5eae45ac), evenings tab",
+  "reason": "Kamel 8:35 PM: same as 10464, remove from the site",
+  "hd": "self (hidden, reversible: delete the hd key)"
+ }
+]

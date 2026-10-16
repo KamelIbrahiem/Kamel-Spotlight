@@ -28,6 +28,8 @@ def build(movies, details):
     for f in cfg["franchises"]:
         ids = set()
         pool = movies   # every media type: movies, series, plays, programmes (so Arabic author worlds span all of them)
+        if f.get("ids"):      # explicit row ids (curated, e.g. Ramadan collections)
+            ids |= {i for i in f["ids"] if i < len(movies) and not movies[i].get("hd")}
         if f.get("pattern"):
             rx = _rx(f["pattern"])
             ids |= {m["id"] for m in pool if rx.search(m["t"].strip())}
@@ -56,7 +58,7 @@ def build(movies, details):
         if len(ids) >= 2:
             ids = sorted(ids, key=lambda i: (movies[i]["y"] or 9999, movies[i]["t"]))
             franchises.append({"n": f["name"], "ar": f.get("ar", ""), "k": f.get("kind", "saga"), "ids": ids})
-    franchises.sort(key=lambda f: (["place", "saga", "author", "director", "actor", "topic"].index(f["k"]), -len(f["ids"])))
+    franchises.sort(key=lambda f: (["ramadan", "place", "saga", "author", "director", "actor", "topic"].index(f["k"]), -len(f["ids"])))
 
     months = {}
     for key, th in cfg["months"].items():

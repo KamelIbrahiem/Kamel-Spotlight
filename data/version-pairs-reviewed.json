@@ -1,0 +1,703 @@
+{
+ "note": "Reviewed Oct 16 2026 with Kamel's rule: a copy in another language (e.g. German-titled) is a separate language version, NOT a duplicate; never hide it for the other-language row. Only same-language copies compete on quality.",
+ "kept_as_separate_language_versions": [
+  {
+   "row": 12483,
+   "base": 12082,
+   "title": "Monsters, Inc.",
+   "base_title": "Monsters Inc",
+   "quality": "1080p",
+   "base_quality": "2160p"
+  },
+  {
+   "row": 12902,
+   "base": 5327,
+   "title": "Breaking Dawn - Bis(s) zum Ende der Nacht - Teil 1",
+   "base_title": "The Twilight Saga: Breaking Dawn - Part 1",
+   "quality": "1080p",
+   "base_quality": "1080p"
+  },
+  {
+   "row": 12903,
+   "base": 5328,
+   "title": "Breaking Dawn - Bis(s) zum Ende der Nacht - Teil 2",
+   "base_title": "The Twilight Saga: Breaking Dawn - Part 2",
+   "quality": "1080p",
+   "base_quality": "1080p"
+  },
+  {
+   "row": 12905,
+   "base": 5582,
+   "title": "Das Schicksal ist ein mieser Verräter",
+   "base_title": "The Fault in Our Stars",
+   "quality": "1080p",
+   "base_quality": "2160p"
+  },
+  {
+   "row": 12909,
+   "base": 6047,
+   "title": "Eclipse - Bis(s) zum Abendrot",
+   "base_title": "The Twilight Saga: Eclipse",
+   "quality": "1080p",
+   "base_quality": "1080p"
+  },
+  {
+   "row": 12914,
+   "base": 2173,
+   "title": "Gremlins - Kleine Monster",
+   "base_title": "Gremlins",
+   "quality": "BDRip",
+   "base_quality": "2160p"
+  },
+  {
+   "row": 12915,
+   "base": 2172,
+   "title": "Gremlins 2 - Die Rückkehr der kleinen Monster",
+   "base_title": "Gremlins 2: The New Batch",
+   "quality": "BDRip",
+   "base_quality": "1080p"
+  },
+  {
+   "row": 12919,
+   "base": 2268,
+   "title": "Harry Potter und der Feuerkelch",
+   "base_title": "Harry Potter and the Goblet of Fire",
+   "quality": "1080p",
+   "base_quality": "2160p"
+  },
+  {
+   "row": 12920,
+   "base": 2271,
+   "title": "Harry Potter und der Gefangene von Askaban",
+   "base_title": "Harry Potter and the Prisoner of Azkaban",
+   "quality": "1080p",
+   "base_quality": "2160p"
+  },
+  {
+   "row": 12921,
+   "base": 2269,
+   "title": "Harry Potter und der Halbblutprinz",
+   "base_title": "Harry Potter and the Half-Blood Prince",
+   "quality": "1080p",
+   "base_quality": "2160p"
+  },
+  {
+   "row": 12922,
+   "base": 2270,
+   "title": "Harry Potter und der Orden des Phönix",
+   "base_title": "Harry Potter and the Order of the Phoenix",
+   "quality": "1080p",
+   "base_quality": "2160p"
+  },
+  {
+   "row": 12923,
+   "base": 2272,
+   "title": "Harry Potter und der Stein der Weisen",
+   "base_title": "Harry Potter and the Philosopher's Stone",
+   "quality": "1080p",
+   "base_quality": "2160p"
+  },
+  {
+   "row": 12924,
+   "base": 2266,
+   "title": "Harry Potter und die Heiligtümer des Todes - Teil 1",
+   "base_title": "Harry Potter and the Deathly Hallows: Part 1",
+   "quality": "1080p",
+   "base_quality": "2160p"
+  },
+  {
+   "row": 12925,
+   "base": 2267,
+   "title": "Harry Potter und die Heiligtümer des Todes - Teil 2",
+   "base_title": "Harry Potter and the Deathly Hallows: Part 2",
+   "quality": "1080p",
+   "base_quality": "2160p"
+  },
+  {
+   "row": 12926,
+   "base": 2265,
+   "title": "Harry Potter und die Kammer des Schreckens",
+   "base_title": "Harry Potter and the Chamber of Secrets",
+   "quality": "1080p",
+   "base_quality": "2160p"
+  },
+  {
+   "row": 12929,
+   "base": 2937,
+   "title": "Legenden der Leidenschaft",
+   "base_title": "Legends of the Fall",
+   "quality": "BDRip",
+   "base_quality": "2160p"
+  },
+  {
+   "row": 12930,
+   "base": 12468,
+   "title": "Maleficent - Die dunkle Fee",
+   "base_title": "Maleficent",
+   "quality": "1080p",
+   "base_quality": "BDRiP"
+  },
+  {
+   "row": 12932,
+   "base": 5329,
+   "title": "New Moon - Biss zur Mittagsstunde",
+   "base_title": "The Twilight Saga: New Moon",
+   "quality": "1080p",
+   "base_quality": "1080p"
+  },
+  {
+   "row": 12934,
+   "base": 1783,
+   "title": "Phantastische Tierwesen: Grindelwalds Verbrechen",
+   "base_title": "Fantastic Beasts: The Crimes of Grindelwald",
+   "quality": "1080p",
+   "base_quality": "2160p"
+  },
+  {
+   "row": 12935,
+   "base": 1779,
+   "title": "Phantastische Tierwesen und wo sie zu finden sind",
+   "base_title": "Fantastic Beasts and Where to Find Them",
+   "quality": "1080p",
+   "base_quality": "2160p"
+  },
+  {
+   "row": 12936,
+   "base": 12516,
+   "title": "Prinzessinnen Schutzprogramm",
+   "base_title": "Princess Protection Program",
+   "quality": "",
+   "base_quality": "1080p"
+  },
+  {
+   "row": 12938,
+   "base": 3268,
+   "title": "Spieglein Spieglein - Die wirklich wahre Geschichte von Schneewittchen",
+   "base_title": "Mirror Mirror",
+   "quality": "BDRip",
+   "base_quality": "1080p"
+  },
+  {
+   "row": 12939,
+   "base": 6307,
+   "title": "Twilight - Biss zum Morgengrauen",
+   "base_title": "Twilight",
+   "quality": "1080p",
+   "base_quality": "2160p"
+  },
+  {
+   "row": 12940,
+   "base": 6551,
+   "title": "Wo die wilden Kerle wohnen",
+   "base_title": "Where the Wild Things Are",
+   "quality": "DVDRIP",
+   "base_quality": "1080p"
+  },
+  {
+   "row": 12941,
+   "base": 12365,
+   "title": "Descendants 3 - Die Nachkommen",
+   "base_title": "Descendants 3",
+   "quality": "1080p",
+   "base_quality": "1080p"
+  },
+  {
+   "row": 12943,
+   "base": 5769,
+   "title": "Arielle, die Meerjungfrau",
+   "base_title": "The Little Mermaid",
+   "quality": "1080p",
+   "base_quality": "2160p"
+  },
+  {
+   "row": 12944,
+   "base": 2442,
+   "title": "Der Grinch",
+   "base_title": "How the Grinch Stole Christmas",
+   "quality": "1080p",
+   "base_quality": "1080p"
+  },
+  {
+   "row": 12945,
+   "base": 12588,
+   "title": "Die Addams Family",
+   "base_title": "The Addams Family",
+   "quality": "720p",
+   "base_quality": "1080p"
+  },
+  {
+   "row": 12946,
+   "base": 3671,
+   "title": "Die fantastische Welt von Oz",
+   "base_title": "Oz the Great and Powerful",
+   "quality": "1080p",
+   "base_quality": "1080p"
+  },
+  {
+   "row": 12947,
+   "base": 3373,
+   "title": "Mufasa: Der König der Löwen",
+   "base_title": "Mufasa: The Lion King",
+   "quality": "720p",
+   "base_quality": "2160p"
+  },
+  {
+   "row": 12948,
+   "base": 12081,
+   "title": "Vaiana",
+   "base_title": "Moana",
+   "quality": "1080p",
+   "base_quality": "2160p"
+  },
+  {
+   "row": 12950,
+   "base": 12274,
+   "title": "Aladdin - Dschafars Rückkehr",
+   "base_title": "The Return of Jafar",
+   "quality": "",
+   "base_quality": "1080p"
+  },
+  {
+   "row": 12951,
+   "base": 12277,
+   "title": "Alice im Wunderland",
+   "base_title": "Alice in Wonderland",
+   "quality": "DVDRIP",
+   "base_quality": "720p"
+  },
+  {
+   "row": 12952,
+   "base": 12284,
+   "title": "Arielle, die Meerjungfrau - Wie alles begann",
+   "base_title": "The Little Mermaid: Ariel's Beginning",
+   "quality": "DVDRiP",
+   "base_quality": "1080p"
+  },
+  {
+   "row": 12954,
+   "base": 12287,
+   "title": "Atlantis - Das Geheimnis der verlorenen Stadt",
+   "base_title": "Atlantis: The Lost Empire",
+   "quality": "DVDRiP",
+   "base_quality": "1080p"
+  },
+  {
+   "row": 12956,
+   "base": 12301,
+   "title": "Barbie als Prinzessin der Tierinsel",
+   "base_title": "Barbie as the Island Princess",
+   "quality": "",
+   "base_quality": "Dvdrip"
+  },
+  {
+   "row": 12957,
+   "base": 12302,
+   "title": "Barbie und das Diamantenschloss",
+   "base_title": "Barbie and the Diamond Castle",
+   "quality": "",
+   "base_quality": "Dvdrip"
+  },
+  {
+   "row": 12958,
+   "base": 12308,
+   "title": "Barbie - Die verzauberten Ballettschuhe",
+   "base_title": "Barbie in the Pink Shoes",
+   "quality": "BDRiP",
+   "base_quality": "1080p"
+  },
+  {
+   "row": 12959,
+   "base": 12317,
+   "title": "Barbie - Mariposa und die Feenprinzessin",
+   "base_title": "Barbie Mariposa & the Fairy Princess",
+   "quality": "DVDRiP",
+   "base_quality": "DVDRip"
+  },
+  {
+   "row": 12960,
+   "base": 12305,
+   "title": "Barbie und das Geheimnis von Oceana 2",
+   "base_title": "Barbie in A Mermaid Tale 2",
+   "quality": "DVDRiP",
+   "base_quality": "DVDRip"
+  },
+  {
+   "row": 12961,
+   "base": 12303,
+   "title": "Barbie und die geheime Tür",
+   "base_title": "Barbie and the Secret Door",
+   "quality": "BDRiP",
+   "base_quality": "BRrip"
+  },
+  {
+   "row": 12963,
+   "base": 12337,
+   "title": "Bolt - Ein Hund für alle Fälle",
+   "base_title": "Bolt",
+   "quality": "BDRip",
+   "base_quality": "720p"
+  },
+  {
+   "row": 12964,
+   "base": 98,
+   "title": "Das große Krabbeln",
+   "base_title": "A Bug's Life",
+   "quality": "DVDRiP",
+   "base_quality": "2160p"
+  },
+  {
+   "row": 12965,
+   "base": 5364,
+   "title": "Der Zauberer von Oz",
+   "base_title": "The Wizard of Oz",
+   "quality": "DVDRiP",
+   "base_quality": "2160p"
+  },
+  {
+   "row": 12966,
+   "base": 12369,
+   "title": "Die Eiskönigin - Party Fieber",
+   "base_title": "Frozen Fever",
+   "quality": "",
+   "base_quality": "1080p"
+  },
+  {
+   "row": 12967,
+   "base": 5141,
+   "title": "Die Muppets Weihnachtsgeschichte",
+   "base_title": "The Muppet Christmas Carol",
+   "quality": "DVDRiP",
+   "base_quality": "2160p"
+  },
+  {
+   "row": 12968,
+   "base": 12525,
+   "title": "Die Hüter des Lichts",
+   "base_title": "Rise of the Guardians",
+   "quality": "BDRip",
+   "base_quality": "1080p"
+  },
+  {
+   "row": 12969,
+   "base": 12083,
+   "title": "Die Monster Uni",
+   "base_title": "Monsters University",
+   "quality": "BDRip",
+   "base_quality": "2160p"
+  },
+  {
+   "row": 12970,
+   "base": 12377,
+   "title": "Die Unglaublichen",
+   "base_title": "The Incredibles",
+   "quality": "HDRip",
+   "base_quality": "1080p"
+  },
+  {
+   "row": 12971,
+   "base": 12390,
+   "title": "Findet Nemo",
+   "base_title": "Finding Nemo",
+   "quality": "DVDRiP",
+   "base_quality": "1080i"
+  },
+  {
+   "row": 12973,
+   "base": 12407,
+   "title": "Hexe Lilli - Die Reise nach Mandolan",
+   "base_title": "Lilly the Witch: The Journey to Mandolan",
+   "quality": "DVDRiP",
+   "base_quality": "1080p"
+  },
+  {
+   "row": 12974,
+   "base": 12414,
+   "title": "Hotel Transsilvanien 2",
+   "base_title": "Hotel Transylvania 2",
+   "quality": "BDRiP",
+   "base_quality": "1080p"
+  },
+  {
+   "row": 12975,
+   "base": 12421,
+   "title": "Ice Age 3 - Die Dinosaurier sind los",
+   "base_title": "Ice Age: Dawn of the Dinosaurs",
+   "quality": "HDRip",
+   "base_quality": "1080p"
+  },
+  {
+   "row": 12976,
+   "base": 12366,
+   "title": "Ich - Einfach unverbesserlich",
+   "base_title": "Despicable Me",
+   "quality": "HDRip",
+   "base_quality": "1080p"
+  },
+  {
+   "row": 12977,
+   "base": 2377,
+   "title": "Kevin - Allein in New York",
+   "base_title": "Home Alone 2: Lost in New York",
+   "quality": "DVDRiP",
+   "base_quality": "2160p"
+  },
+  {
+   "row": 12978,
+   "base": 2376,
+   "title": "Kevin - Allein zu Haus",
+   "base_title": "Home Alone",
+   "quality": "DVDRiP",
+   "base_quality": "2160p"
+  },
+  {
+   "row": 12983,
+   "base": 12511,
+   "title": "Planes 2 - Immer im Einsatz",
+   "base_title": "Planes: Fire & Rescue",
+   "quality": "BDRiP",
+   "base_quality": "1080p"
+  },
+  {
+   "row": 12986,
+   "base": 12524,
+   "title": "Rio 2 - Dschungelfieber",
+   "base_title": "Rio 2",
+   "quality": "HDTS",
+   "base_quality": "1080p"
+  },
+  {
+   "row": 12989,
+   "base": 12614,
+   "title": "Tinkerbell - Die Suche nach dem verlorenen Schatz",
+   "base_title": "Tinker Bell and the Lost Treasure",
+   "quality": "DVDRip",
+   "base_quality": "DVDRiP"
+  },
+  {
+   "row": 12990,
+   "base": 12579,
+   "title": "TinkerBell und die Piratenfee",
+   "base_title": "Tinker Bell and the Pirate Fairy",
+   "quality": "BDRiP",
+   "base_quality": "1080p"
+  },
+  {
+   "row": 12991,
+   "base": 12630,
+   "title": "Turbo - Kleine Schnecke, großer Traum",
+   "base_title": "Turbo",
+   "quality": "BDRip",
+   "base_quality": "1080p"
+  },
+  {
+   "row": 12993,
+   "base": 12644,
+   "title": "Familie Willoughby",
+   "base_title": "The Willoughbys",
+   "quality": "720p",
+   "base_quality": "1080p"
+  },
+  {
+   "row": 12995,
+   "base": 12419,
+   "title": "Drachenzähmen leicht gemacht 2",
+   "base_title": "How to Train Your Dragon 2",
+   "quality": "720p",
+   "base_quality": "1080p"
+  },
+  {
+   "row": 12999,
+   "base": 12409,
+   "title": "High School Musical 1",
+   "base_title": "High School Musical",
+   "quality": "HD",
+   "base_quality": "720p"
+  },
+  {
+   "row": 13001,
+   "base": 12410,
+   "title": "High School Musical 3",
+   "base_title": "High School Musical 3: Senior Year",
+   "quality": "HD",
+   "base_quality": "720p"
+  },
+  {
+   "row": 13009,
+   "base": 12309,
+   "title": "Barbie: Mariposa",
+   "base_title": "Barbie: Mariposa and Her Butterfly Fairy Friends",
+   "quality": "",
+   "base_quality": "DVDRip"
+  }
+ ],
+ "same_title_pairs_pending_quality_review": [
+  {
+   "row": 12314,
+   "base": 12298,
+   "title": "Barbie and the Magic of Pegasus",
+   "quality": "",
+   "base_quality": ""
+  },
+  {
+   "row": 12392,
+   "base": 12391,
+   "title": "Finding Dory",
+   "quality": "1080p",
+   "base_quality": "1080p"
+  },
+  {
+   "row": 12468,
+   "base": 3110,
+   "title": "Maleficent",
+   "quality": "BDRiP",
+   "base_quality": "2160p"
+  },
+  {
+   "row": 12543,
+   "base": 4396,
+   "title": "Snow White and the Huntsman",
+   "quality": "1080p",
+   "base_quality": "2160p"
+  },
+  {
+   "row": 12570,
+   "base": 12569,
+   "title": "The Cheetah Girls: One World",
+   "quality": "",
+   "base_quality": "720p"
+  },
+  {
+   "row": 12641,
+   "base": 12095,
+   "title": "Zootopia",
+   "quality": "1080p",
+   "base_quality": "2160p"
+  },
+  {
+   "row": 12908,
+   "base": 1590,
+   "title": "Dumbo",
+   "quality": "720p",
+   "base_quality": "1080p"
+  },
+  {
+   "row": 12933,
+   "base": 3685,
+   "title": "Pan",
+   "quality": "BDRiP",
+   "base_quality": "2160p"
+  },
+  {
+   "row": 12937,
+   "base": 4470,
+   "title": "Spider-Man: Far from Home",
+   "quality": "1080p",
+   "base_quality": "2160p"
+  },
+  {
+   "row": 12949,
+   "base": 6580,
+   "title": "Wicked",
+   "quality": "1080p",
+   "base_quality": "2160p"
+  },
+  {
+   "row": 12955,
+   "base": 12295,
+   "title": "Bambi",
+   "quality": "BDRip",
+   "base_quality": "720p"
+  },
+  {
+   "row": 12972,
+   "base": 12404,
+   "title": "Hercules",
+   "quality": "DVDRiP",
+   "base_quality": "720p"
+  },
+  {
+   "row": 12980,
+   "base": 12442,
+   "title": "Kung Fu Panda 2",
+   "quality": "HDRip",
+   "base_quality": "1080p"
+  },
+  {
+   "row": 12982,
+   "base": 12486,
+   "title": "Muppets Most Wanted",
+   "quality": "BDRiP",
+   "base_quality": "1080p"
+  },
+  {
+   "row": 12984,
+   "base": 12510,
+   "title": "Planes",
+   "quality": "BDRip",
+   "base_quality": "1080p"
+  },
+  {
+   "row": 12985,
+   "base": 12512,
+   "title": "Pocahontas",
+   "quality": "DVDRiP",
+   "base_quality": "1080p"
+  },
+  {
+   "row": 12987,
+   "base": 12523,
+   "title": "Rio",
+   "quality": "HDRip",
+   "base_quality": "1080p"
+  },
+  {
+   "row": 12996,
+   "base": 12559,
+   "title": "Tarzan",
+   "quality": "DVDRiP",
+   "base_quality": "1080p"
+  },
+  {
+   "row": 13000,
+   "base": 12408,
+   "title": "High School Musical 2",
+   "quality": "HD",
+   "base_quality": "1080p"
+  },
+  {
+   "row": 13002,
+   "base": 643,
+   "title": "Beauty and the Beast",
+   "quality": "720p",
+   "base_quality": "2160p"
+  },
+  {
+   "row": 13005,
+   "base": 5078,
+   "title": "The Little Mermaid",
+   "quality": "",
+   "base_quality": "2160p"
+  },
+  {
+   "row": 13015,
+   "base": 12381,
+   "title": "Dumbo",
+   "quality": "",
+   "base_quality": "720p"
+  },
+  {
+   "row": 13020,
+   "base": 12080,
+   "title": "Beauty and the Beast",
+   "quality": "DVDRip",
+   "base_quality": "2160p"
+  },
+  {
+   "row": 13021,
+   "base": 5068,
+   "title": "The Lego Movie",
+   "quality": "720p",
+   "base_quality": "2160p"
+  }
+ ]
+}

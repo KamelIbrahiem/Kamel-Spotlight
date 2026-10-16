@@ -116,6 +116,8 @@ def subcat(row):
 def seasons_of(raw):
     """'S02,S93' -> [2]; tokens above S40 are release-group noise, not seasons."""
     out = []
+    for a, b in re.findall(r"S(\d{1,2})\s*[-\u2013]\s*S(\d{1,2})", raw or ""):
+        if 0 < int(a) <= int(b) <= 40: out += [x for x in range(int(a), int(b) + 1) if x not in out]
     for t in re.findall(r"S(\d{1,2})", raw or ""):
         if 0 < int(t) <= 40 and int(t) not in out: out.append(int(t))
     return out

@@ -6,9 +6,8 @@ const get = (name) => cache[name] ??= fetch(`${CONFIG.dataPath}/${name}.json`, {
 });
 
 export const store = { movies: [], index: [] };
-export async function loadCore() {
-  [store.movies, store.index] = await Promise.all([get("movies"), get("search-index")]);
-}
+export async function loadCore() { store.movies = await get("movies"); }       // the 6.8 MB search index loads only when someone searches
+export const ensureIndex = async () => { if (!store.index.length) store.index = await get("search-index"); };
 export const loadStats = () => get("statistics");
 export const loadHealth = () => get("health");
 export const loadPeople = () => get("people");
